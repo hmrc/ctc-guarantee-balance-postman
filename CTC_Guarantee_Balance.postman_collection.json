@@ -1,0 +1,442 @@
+{
+	"info": {
+		"_postman_id": "15bf6a91-248c-47b7-8bac-22f8f7d19437",
+		"name": "CTC_Guarantee_Balance",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Smoke Tests",
+			"item": [
+				{
+					"name": "Asynchronous Balance Request",
+					"item": [
+						{
+							"name": "POST Auth Stub Bearer Token",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"bearerToken\", \"\");"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains HTML\", function () {",
+											"    pm.response.to.have.header(\"Content-Type\");",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"text/html\");",
+											"});",
+											"",
+											"pm.test(\"HTML page contains auth token\", function () {",
+											"    const $ = cheerio.load(pm.response.text());",
+											"",
+											"    const tokenHeaderText = $('td[data-session-id=\"authToken\"] code').text();",
+											"",
+											"    pm.expect(tokenHeaderText).to.contain(\"Bearer \");",
+											"",
+											"    const tokenText = tokenHeaderText.replace(\"Bearer \", \"\");",
+											"",
+											"    pm.collectionVariables.set(\"bearerToken\", tokenText);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "authorityId",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "redirectionUrl",
+											"value": "{{authBaseUrl}}/auth-login-stub/session",
+											"type": "text"
+										},
+										{
+											"key": "credentialStrength",
+											"value": "weak",
+											"type": "text"
+										},
+										{
+											"key": "confidenceLevel",
+											"value": "50",
+											"type": "text"
+										},
+										{
+											"key": "affinityGroup",
+											"value": "Individual",
+											"type": "text"
+										},
+										{
+											"key": "enrolment[0].state",
+											"value": "Activated",
+											"type": "text"
+										},
+										{
+											"key": "enrolment[0].name",
+											"value": "HMCE-NCTS-ORG",
+											"type": "text"
+										},
+										{
+											"key": "enrolment[0].taxIdentifier[0].name",
+											"value": "VATRegNoTURN",
+											"type": "text"
+										},
+										{
+											"key": "enrolment[0].taxIdentifier[0].value",
+											"value": "9999999911",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{authBaseUrl}}/auth-login-stub/gg-sign-in",
+									"host": [
+										"{{authBaseUrl}}"
+									],
+									"path": [
+										"auth-login-stub",
+										"gg-sign-in"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Guarantee Balance Request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 202 ACCEPTED\", function () {",
+											"    pm.response.to.have.status(202);",
+											"});",
+											"",
+											"pm.test(\"Response body is JSON\", function() {",
+											"    pm.expect(pm.response.to.have.jsonBody());",
+											"});",
+											"",
+											"pm.test(\"Response body contains balance ID\", function () {",
+											"    const uuidRegex = /^[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$/;",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson).to.have.property(\"balanceId\");",
+											"    pm.expect(responseJson.balanceId).to.match(uuidRegex);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiBaseUrl}}/balances",
+									"host": [
+										"{{apiBaseUrl}}"
+									],
+									"path": [
+										"balances"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{bearerToken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789012\");",
+									"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX2\");",
+									"pm.collectionVariables.set(\"accessCode\", \"ABC1\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Synchronous Balance Request",
+					"item": [
+						{
+							"name": "POST Auth Stub Bearer Token",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"bearerToken\", \"\");"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains HTML\", function () {",
+											"    pm.response.to.have.header(\"Content-Type\");",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"text/html\");",
+											"});",
+											"",
+											"pm.test(\"HTML page contains auth token\", function () {",
+											"    const $ = cheerio.load(pm.response.text());",
+											"",
+											"    const tokenHeaderText = $('td[data-session-id=\"authToken\"] code').text();",
+											"",
+											"    pm.expect(tokenHeaderText).to.contain(\"Bearer \");",
+											"",
+											"    const tokenText = tokenHeaderText.replace(\"Bearer \", \"\");",
+											"",
+											"    pm.collectionVariables.set(\"bearerToken\", tokenText);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "authorityId",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "redirectionUrl",
+											"value": "{{authBaseUrl}}/auth-login-stub/session",
+											"type": "text"
+										},
+										{
+											"key": "credentialStrength",
+											"value": "weak",
+											"type": "text"
+										},
+										{
+											"key": "confidenceLevel",
+											"value": "50",
+											"type": "text"
+										},
+										{
+											"key": "affinityGroup",
+											"value": "Individual",
+											"type": "text"
+										},
+										{
+											"key": "enrolment[0].state",
+											"value": "Activated",
+											"type": "text"
+										},
+										{
+											"key": "enrolment[0].name",
+											"value": "HMCE-NCTS-ORG",
+											"type": "text"
+										},
+										{
+											"key": "enrolment[0].taxIdentifier[0].name",
+											"value": "VATRegNoTURN",
+											"type": "text"
+										},
+										{
+											"key": "enrolment[0].taxIdentifier[0].value",
+											"value": "9999999911",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{authBaseUrl}}/auth-login-stub/gg-sign-in",
+									"host": [
+										"{{authBaseUrl}}"
+									],
+									"path": [
+										"auth-login-stub",
+										"gg-sign-in"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Guarantee Balance Request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response body is JSON\", function() {",
+											"    pm.expect(pm.response.to.have.jsonBody());",
+											"});",
+											"",
+											"pm.test(\"Response body contains balance\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson).to.have.property(\"response\");",
+											"    pm.expect(responseJson.response).to.be.an(\"object\");",
+											"    pm.expect(responseJson.response).to.have.property(\"balance\");",
+											"    pm.expect(responseJson.response.balance).to.be.a(\"number\");",
+											"    pm.expect(responseJson.response).to.have.property(\"currency\");",
+											"    pm.expect(responseJson.response.currency).to.be.a(\"string\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiBaseUrl}}/balances",
+									"host": [
+										"{{apiBaseUrl}}"
+									],
+									"path": [
+										"balances"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{bearerToken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789012\");",
+									"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX2\");",
+									"pm.collectionVariables.set(\"accessCode\", \"ABC1\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "taxIdentifier",
+			"value": ""
+		},
+		{
+			"key": "guaranteeReference",
+			"value": ""
+		},
+		{
+			"key": "accessCode",
+			"value": ""
+		},
+		{
+			"key": "bearerToken",
+			"value": ""
+		}
+	]
+}
