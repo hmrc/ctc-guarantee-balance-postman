@@ -9,10 +9,10 @@
 			"name": "Smoke Tests",
 			"item": [
 				{
-					"name": "Asynchronous Balance Request",
+					"name": "Get Bearer Token",
 					"item": [
 						{
-							"name": "POST Auth Stub Bearer Token",
+							"name": "POST Auth Login API Bearer Token",
 							"event": [
 								{
 									"listen": "prerequest",
@@ -27,24 +27,19 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
+											"pm.test(\"Status code is 201 CREATED\", function () {",
+											"    pm.response.to.have.status(201);",
 											"});",
 											"",
-											"pm.test(\"Response contains HTML\", function () {",
-											"    pm.response.to.have.header(\"Content-Type\");",
-											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"text/html\");",
+											"pm.test(\"Response contains JSON\", function () {",
+											"    pm.expect(pm.response.to.have.jsonBody());",
 											"});",
 											"",
-											"pm.test(\"HTML page contains auth token\", function () {",
-											"    const $ = cheerio.load(pm.response.text());",
-											"",
-											"    const tokenHeaderText = $('td[data-session-id=\"authToken\"] code').text();",
-											"",
+											"pm.test(\"Response Authorization header contains bearer token\", function () {",
+											"    pm.expect(pm.response.headers.has('Authorization'));",
+											"    const tokenHeaderText = pm.response.headers.get('Authorization');",
 											"    pm.expect(tokenHeaderText).to.contain(\"Bearer \");",
-											"",
 											"    const tokenText = tokenHeaderText.replace(\"Bearer \", \"\");",
-											"",
 											"    pm.collectionVariables.set(\"bearerToken\", tokenText);",
 											"});"
 										],
@@ -59,68 +54,33 @@
 								"method": "POST",
 								"header": [],
 								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "authorityId",
-											"value": "",
-											"type": "text"
-										},
-										{
-											"key": "redirectionUrl",
-											"value": "{{authBaseUrl}}/auth-login-stub/session",
-											"type": "text"
-										},
-										{
-											"key": "credentialStrength",
-											"value": "weak",
-											"type": "text"
-										},
-										{
-											"key": "confidenceLevel",
-											"value": "50",
-											"type": "text"
-										},
-										{
-											"key": "affinityGroup",
-											"value": "Individual",
-											"type": "text"
-										},
-										{
-											"key": "enrolment[0].state",
-											"value": "Activated",
-											"type": "text"
-										},
-										{
-											"key": "enrolment[0].name",
-											"value": "HMCE-NCTS-ORG",
-											"type": "text"
-										},
-										{
-											"key": "enrolment[0].taxIdentifier[0].name",
-											"value": "VATRegNoTURN",
-											"type": "text"
-										},
-										{
-											"key": "enrolment[0].taxIdentifier[0].value",
-											"value": "9999999911",
-											"type": "text"
+									"mode": "raw",
+									"raw": "{\n    \"affinityGroup\": \"Individual\",\n    \"credentialStrength\": \"weak\",\n    \"confidenceLevel\": 50,\n    \"credId\": \"{{$randomAlphaNumeric}}\",\n    \"enrolments\": [\n        {\n            \"key\": \"HMCE-NCTS-ORG\",\n            \"state\": \"Activated\",\n            \"ttl\": 3600,\n            \"identifiers\": [\n                {\n                    \"key\": \"VatRegNoTURN\",\n                    \"value\": \"{{taxIdentifier}}\"\n                }\n            ]\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
 										}
-									]
+									}
 								},
 								"url": {
-									"raw": "{{authBaseUrl}}/auth-login-stub/gg-sign-in",
+									"raw": "{{authLoginApiBaseUrl}}/government-gateway/session/login",
 									"host": [
-										"{{authBaseUrl}}"
+										"{{authLoginApiBaseUrl}}"
 									],
 									"path": [
-										"auth-login-stub",
-										"gg-sign-in"
+										"government-gateway",
+										"session",
+										"login"
 									]
 								}
 							},
 							"response": []
-						},
+						}
+					]
+				},
+				{
+					"name": "Synchronous Balance Request Success",
+					"item": [
 						{
 							"name": "POST Guarantee Balance Request",
 							"event": [
@@ -128,21 +88,33 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 202 ACCEPTED\", function () {",
-											"    pm.response.to.have.status(202);",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
 											"});",
 											"",
 											"pm.test(\"Response body is JSON\", function() {",
 											"    pm.expect(pm.response.to.have.jsonBody());",
 											"});",
 											"",
-											"pm.test(\"Response body contains balance ID\", function () {",
-											"    const uuidRegex = /^[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$/;",
+											"pm.test(\"Response body contains balance\", function () {",
 											"    const responseJson = pm.response.json();",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson).to.have.property(\"balanceId\");",
-											"    pm.expect(responseJson.balanceId).to.match(uuidRegex);",
+											"    pm.expect(responseJson).to.have.property(\"response\");",
+											"    pm.expect(responseJson.response).to.be.an(\"object\");",
+											"    pm.expect(responseJson.response).to.have.property(\"balance\");",
+											"    pm.expect(responseJson.response.balance).to.be.a(\"number\");",
+											"    pm.expect(responseJson.response).to.have.property(\"currency\");",
+											"    pm.expect(responseJson.response.currency).to.be.a(\"string\");",
 											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
 											""
 										],
 										"type": "text/javascript"
@@ -151,7 +123,13 @@
 							],
 							"request": {
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.hmrc.1.0+json",
+										"type": "text"
+									}
+								],
 								"body": {
 									"mode": "raw",
 									"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
@@ -208,118 +186,8 @@
 					]
 				},
 				{
-					"name": "Synchronous Balance Request",
+					"name": "Synchronous Balance Request Functional Error",
 					"item": [
-						{
-							"name": "POST Auth Stub Bearer Token",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.collectionVariables.set(\"bearerToken\", \"\");"
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"pm.test(\"Response contains HTML\", function () {",
-											"    pm.response.to.have.header(\"Content-Type\");",
-											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contain(\"text/html\");",
-											"});",
-											"",
-											"pm.test(\"HTML page contains auth token\", function () {",
-											"    const $ = cheerio.load(pm.response.text());",
-											"",
-											"    const tokenHeaderText = $('td[data-session-id=\"authToken\"] code').text();",
-											"",
-											"    pm.expect(tokenHeaderText).to.contain(\"Bearer \");",
-											"",
-											"    const tokenText = tokenHeaderText.replace(\"Bearer \", \"\");",
-											"",
-											"    pm.collectionVariables.set(\"bearerToken\", tokenText);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "authorityId",
-											"value": "",
-											"type": "text"
-										},
-										{
-											"key": "redirectionUrl",
-											"value": "{{authBaseUrl}}/auth-login-stub/session",
-											"type": "text"
-										},
-										{
-											"key": "credentialStrength",
-											"value": "weak",
-											"type": "text"
-										},
-										{
-											"key": "confidenceLevel",
-											"value": "50",
-											"type": "text"
-										},
-										{
-											"key": "affinityGroup",
-											"value": "Individual",
-											"type": "text"
-										},
-										{
-											"key": "enrolment[0].state",
-											"value": "Activated",
-											"type": "text"
-										},
-										{
-											"key": "enrolment[0].name",
-											"value": "HMCE-NCTS-ORG",
-											"type": "text"
-										},
-										{
-											"key": "enrolment[0].taxIdentifier[0].name",
-											"value": "VATRegNoTURN",
-											"type": "text"
-										},
-										{
-											"key": "enrolment[0].taxIdentifier[0].value",
-											"value": "9999999911",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{authBaseUrl}}/auth-login-stub/gg-sign-in",
-									"host": [
-										"{{authBaseUrl}}"
-									],
-									"path": [
-										"auth-login-stub",
-										"gg-sign-in"
-									]
-								}
-							},
-							"response": []
-						},
 						{
 							"name": "POST Guarantee Balance Request",
 							"event": [
@@ -327,23 +195,26 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 200 OK\", function () {",
-											"    pm.response.to.have.status(200);",
+											"pm.test(\"Status code is 400 BAD REQUEST\", function () {",
+											"    pm.response.to.have.status(400);",
 											"});",
 											"",
 											"pm.test(\"Response body is JSON\", function() {",
 											"    pm.expect(pm.response.to.have.jsonBody());",
 											"});",
 											"",
-											"pm.test(\"Response body contains balance\", function () {",
+											"pm.test(\"Response body contains errors\", function () {",
 											"    const responseJson = pm.response.json();",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson).to.have.property(\"code\");",
+											"    pm.expect(responseJson.code).to.eql(\"FUNCTIONAL_ERROR\");",
+											"    pm.expect(responseJson).to.have.property(\"message\");",
+											"    pm.expect(responseJson.message).to.eql(\"The request was rejected by the guarantee management system\");",
 											"    pm.expect(responseJson).to.have.property(\"response\");",
 											"    pm.expect(responseJson.response).to.be.an(\"object\");",
-											"    pm.expect(responseJson.response).to.have.property(\"balance\");",
-											"    pm.expect(responseJson.response.balance).to.be.a(\"number\");",
-											"    pm.expect(responseJson.response).to.have.property(\"currency\");",
-											"    pm.expect(responseJson.response.currency).to.be.a(\"string\");",
+											"    pm.expect(responseJson.response).to.have.property(\"errors\");",
+											"    pm.expect(responseJson.response.errors).to.be.an(\"array\");",
+											"    pm.expect(responseJson.response.errors).to.not.be.empty;",
 											"});",
 											""
 										],
@@ -362,7 +233,13 @@
 							],
 							"request": {
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.hmrc.1.0+json",
+										"type": "text"
+									}
+								],
 								"body": {
 									"mode": "raw",
 									"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
@@ -401,9 +278,929 @@
 							"script": {
 								"type": "text/javascript",
 								"exec": [
-									"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789012\");",
-									"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX2\");",
-									"pm.collectionVariables.set(\"accessCode\", \"ABC1\");"
+									"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789013\");",
+									"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX3\");",
+									"pm.collectionVariables.set(\"accessCode\", \"E906\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Synchronous Balance Request XML Error",
+					"item": [
+						{
+							"name": "POST Guarantee Balance Request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500 INTERNAL SERVER ERROR\", function () {",
+											"    pm.response.to.have.status(500);",
+											"});",
+											"",
+											"pm.test(\"Response body is JSON\", function() {",
+											"    pm.expect(pm.response.to.have.jsonBody());",
+											"});",
+											"",
+											"pm.test(\"Response body contains errors\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson).to.have.property(\"code\");",
+											"    pm.expect(responseJson.code).to.eql(\"INTERNAL_SERVER_ERROR\");",
+											"    pm.expect(responseJson).to.have.property(\"message\");",
+											"    pm.expect(responseJson.message).to.eql(\"Internal server error\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.hmrc.1.0+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiBaseUrl}}/balances",
+									"host": [
+										"{{apiBaseUrl}}"
+									],
+									"path": [
+										"balances"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{bearerToken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789014\");",
+									"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX4\");",
+									"pm.collectionVariables.set(\"accessCode\", \"E917\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Asynchronous Balance Request Success",
+					"item": [
+						{
+							"name": "POST Guarantee Balance Request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 202 ACCEPTED\", function () {",
+											"    pm.response.to.have.status(202);",
+											"});",
+											"",
+											"pm.test(\"Response body is JSON\", function() {",
+											"    pm.expect(pm.response.to.have.jsonBody());",
+											"});",
+											"",
+											"pm.test(\"Response body contains balance ID\", function () {",
+											"    const uuidRegex = /^[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$/;",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson).to.have.property(\"balanceId\");",
+											"    pm.expect(responseJson.balanceId).to.match(uuidRegex);",
+											"    pm.collectionVariables.set(\"balanceId\", responseJson.balanceId);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.hmrc.1.0+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"T000\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiBaseUrl}}/balances",
+									"host": [
+										"{{apiBaseUrl}}"
+									],
+									"path": [
+										"balances"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Guarantee Balance Request Before Response",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response body is JSON\", function() {",
+											"    pm.expect(pm.response.to.have.jsonBody());",
+											"});",
+											"",
+											"pm.test(\"Response body contains balance ID without response\", function () {",
+											"    const uuidRegex = /^[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$/;",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson).to.have.property(\"request\");",
+											"    pm.expect(responseJson.request).to.have.property(\"balanceId\");",
+											"    pm.expect(responseJson.request.balanceId).to.match(uuidRegex);",
+											"    pm.expect(responseJson.request).not.to.have.property(\"response\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.hmrc.1.0+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"T000\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiBaseUrl}}/balances/{{balanceId}}",
+									"host": [
+										"{{apiBaseUrl}}"
+									],
+									"path": [
+										"balances",
+										"{{balanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Trigger Successful Response",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"response\": {\n        \"status\": \"SUCCESS\",\n        \"balance\": 12345678.9,\n        \"currency\": \"EUR\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{testSupportBaseUrl}}/balances/{{balanceId}}",
+									"host": [
+										"{{testSupportBaseUrl}}"
+									],
+									"path": [
+										"balances",
+										"{{balanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Guarantee Balance Request After Response",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 202 ACCEPTED\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response body is JSON\", function() {",
+											"    pm.expect(pm.response.to.have.jsonBody());",
+											"});",
+											"",
+											"pm.test(\"Response body contains balance\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson).to.have.property(\"request\");",
+											"    pm.expect(responseJson.request).to.have.property(\"response\");",
+											"    pm.expect(responseJson.request.response).to.be.an(\"object\");",
+											"    pm.expect(responseJson.request.response).to.have.property(\"balance\");",
+											"    pm.expect(responseJson.request.response.balance).to.be.a(\"number\");",
+											"    pm.expect(responseJson.request.response).to.have.property(\"currency\");",
+											"    pm.expect(responseJson.request.response.currency).to.be.a(\"string\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.hmrc.1.0+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"T000\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiBaseUrl}}/balances/{{balanceId}}",
+									"host": [
+										"{{apiBaseUrl}}"
+									],
+									"path": [
+										"balances",
+										"{{balanceId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{bearerToken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789015\");",
+									"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX5\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Asynchronous Balance Request Functional Error",
+					"item": [
+						{
+							"name": "POST Guarantee Balance Request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 202 ACCEPTED\", function () {",
+											"    pm.response.to.have.status(202);",
+											"});",
+											"",
+											"pm.test(\"Response body is JSON\", function() {",
+											"    pm.expect(pm.response.to.have.jsonBody());",
+											"});",
+											"",
+											"pm.test(\"Response body contains balance ID\", function () {",
+											"    const uuidRegex = /^[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$/;",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson).to.have.property(\"balanceId\");",
+											"    pm.expect(responseJson.balanceId).to.match(uuidRegex);",
+											"    pm.collectionVariables.set(\"balanceId\", responseJson.balanceId);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.hmrc.1.0+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"T000\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiBaseUrl}}/balances",
+									"host": [
+										"{{apiBaseUrl}}"
+									],
+									"path": [
+										"balances"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Guarantee Balance Request Before Response",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response body is JSON\", function() {",
+											"    pm.expect(pm.response.to.have.jsonBody());",
+											"});",
+											"",
+											"pm.test(\"Response body contains balance ID without response\", function () {",
+											"    const uuidRegex = /^[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$/;",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson).to.have.property(\"request\");",
+											"    pm.expect(responseJson.request).to.have.property(\"balanceId\");",
+											"    pm.expect(responseJson.request.balanceId).to.match(uuidRegex);",
+											"    pm.expect(responseJson.request).not.to.have.property(\"response\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.hmrc.1.0+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"T000\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiBaseUrl}}/balances/{{balanceId}}",
+									"host": [
+										"{{apiBaseUrl}}"
+									],
+									"path": [
+										"balances",
+										"{{balanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Trigger Functional Error Response",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"response\": {\n        \"status\": \"FUNCTIONAL_ERROR\",\n        \"errors\": [\n            {\n                \"errorType\": 12,\n                \"errorPointer\": \"Foo.Bar(1).Baz\"\n            }\n        ]\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{testSupportBaseUrl}}/balances/{{balanceId}}",
+									"host": [
+										"{{testSupportBaseUrl}}"
+									],
+									"path": [
+										"balances",
+										"{{balanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Guarantee Balance Request After Response",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 202 ACCEPTED\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response body is JSON\", function() {",
+											"    pm.expect(pm.response.to.have.jsonBody());",
+											"});",
+											"",
+											"pm.test(\"Response body contains errors\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson).to.have.property(\"request\");",
+											"    pm.expect(responseJson.request).to.have.property(\"response\");",
+											"    pm.expect(responseJson.request.response).to.be.an(\"object\");",
+											"    pm.expect(responseJson.request.response).to.have.property(\"status\");",
+											"    pm.expect(responseJson.request.response.status).to.eql(\"FUNCTIONAL_ERROR\");",
+											"    pm.expect(responseJson.request.response).to.have.property(\"errors\");",
+											"    pm.expect(responseJson.request.response.errors).to.be.an(\"array\");",
+											"    pm.expect(responseJson.request.response.errors).to.not.be.empty;",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.hmrc.1.0+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"T000\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiBaseUrl}}/balances/{{balanceId}}",
+									"host": [
+										"{{apiBaseUrl}}"
+									],
+									"path": [
+										"balances",
+										"{{balanceId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{bearerToken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789016\");",
+									"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX6\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Asynchronous Balance Request XML Error",
+					"item": [
+						{
+							"name": "POST Guarantee Balance Request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 202 ACCEPTED\", function () {",
+											"    pm.response.to.have.status(202);",
+											"});",
+											"",
+											"pm.test(\"Response body is JSON\", function() {",
+											"    pm.expect(pm.response.to.have.jsonBody());",
+											"});",
+											"",
+											"pm.test(\"Response body contains balance ID\", function () {",
+											"    const uuidRegex = /^[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$/;",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson).to.have.property(\"balanceId\");",
+											"    pm.expect(responseJson.balanceId).to.match(uuidRegex);",
+											"    pm.collectionVariables.set(\"balanceId\", responseJson.balanceId);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.hmrc.1.0+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"T000\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiBaseUrl}}/balances",
+									"host": [
+										"{{apiBaseUrl}}"
+									],
+									"path": [
+										"balances"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Guarantee Balance Request Before Response",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response body is JSON\", function() {",
+											"    pm.expect(pm.response.to.have.jsonBody());",
+											"});",
+											"",
+											"pm.test(\"Response body contains balance ID without response\", function () {",
+											"    const uuidRegex = /^[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$/;",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson).to.have.property(\"request\");",
+											"    pm.expect(responseJson.request).to.have.property(\"balanceId\");",
+											"    pm.expect(responseJson.request.balanceId).to.match(uuidRegex);",
+											"    pm.expect(responseJson.request).not.to.have.property(\"response\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.hmrc.1.0+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"T000\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiBaseUrl}}/balances/{{balanceId}}",
+									"host": [
+										"{{apiBaseUrl}}"
+									],
+									"path": [
+										"balances",
+										"{{balanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Trigger XML Error Response",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"response\": {\n        \"status\": \"XML_ERROR\",\n        \"errors\": [\n            {\n                \"errorType\": 12,\n                \"errorPointer\": \"Foo.Bar(1).Baz\"\n            }\n        ]\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{testSupportBaseUrl}}/balances/{{balanceId}}",
+									"host": [
+										"{{testSupportBaseUrl}}"
+									],
+									"path": [
+										"balances",
+										"{{balanceId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Guarantee Balance Request After Response",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500 INTERNAL SERVER ERROR\", function () {",
+											"    pm.response.to.have.status(500);",
+											"});",
+											"",
+											"pm.test(\"Response body is JSON\", function() {",
+											"    pm.expect(pm.response.to.have.jsonBody());",
+											"});",
+											"",
+											"pm.test(\"Response body contains errors\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson).to.have.property(\"code\");",
+											"    pm.expect(responseJson.code).to.eql(\"INTERNAL_SERVER_ERROR\");",
+											"    pm.expect(responseJson).to.have.property(\"message\");",
+											"    pm.expect(responseJson.message).to.eql(\"Internal server error\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.hmrc.1.0+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"T000\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{apiBaseUrl}}/balances/{{balanceId}}",
+									"host": [
+										"{{apiBaseUrl}}"
+									],
+									"path": [
+										"balances",
+										"{{balanceId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{bearerToken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789017\");",
+									"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX7\");"
 								]
 							}
 						},
@@ -436,6 +1233,10 @@
 		},
 		{
 			"key": "bearerToken",
+			"value": ""
+		},
+		{
+			"key": "balanceId",
 			"value": ""
 		}
 	]
