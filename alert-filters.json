@@ -1,0 +1,20 @@
+{
+    "add": [
+        {
+            "reason": "This alert doesn't make any sense in the context of testing APIs in an acceptance test suite - it is triggered by 500 response codes",
+            "contextId": 1,
+            "url": "http:\/\/localhost:10207\/balances.*",
+            "ruleId": 90022,
+            "newLevel": -1,
+            "urlIsRegex": true
+        },
+        {
+            "reason": "This alert doesn't make any sense in the context of testing APIs in an acceptance test suite - it is triggered by the text 'Internal server error'",
+            "contextId": 1,
+            "url": "http:\/\/localhost:10207\/balances.*",
+            "ruleId": 10023,
+            "newLevel": -1,
+            "urlIsRegex": true
+        }
+    ]
+}
