@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "15bf6a91-248c-47b7-8bac-22f8f7d19437",
+		"_postman_id": "7380222b-558e-47f0-8c41-eee851d8fd40",
 		"name": "CTC_Guarantee_Balance",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -12,71 +12,452 @@
 					"name": "Get Bearer Token",
 					"item": [
 						{
-							"name": "POST Auth Login API Bearer Token",
-							"event": [
+							"name": "LOCAL_Auth_Bearer_Token",
+							"item": [
 								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.collectionVariables.set(\"bearerToken\", \"\");"
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 201 CREATED\", function () {",
-											"    pm.response.to.have.status(201);",
-											"});",
-											"",
-											"pm.test(\"Response contains JSON\", function () {",
-											"    pm.expect(pm.response.to.have.jsonBody());",
-											"});",
-											"",
-											"pm.test(\"Response Authorization header contains bearer token\", function () {",
-											"    pm.expect(pm.response.headers.has('Authorization'));",
-											"    const tokenHeaderText = pm.response.headers.get('Authorization');",
-											"    pm.expect(tokenHeaderText).to.contain(\"Bearer \");",
-											"    const tokenText = tokenHeaderText.replace(\"Bearer \", \"\");",
-											"    pm.collectionVariables.set(\"bearerToken\", tokenText);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
+									"name": "POST Auth Login API Bearer Token",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.set(\"bearerToken\", \"\");"
+												],
+												"type": "text/javascript",
+												"id": "5d73035c-032e-407f-be75-49408cea0893"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201 CREATED\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													"",
+													"pm.test(\"Response contains JSON\", function () {",
+													"    pm.expect(pm.response.to.have.jsonBody());",
+													"});",
+													"",
+													"pm.test(\"Response Authorization header contains bearer token\", function () {",
+													"    pm.expect(pm.response.headers.has('Authorization'));",
+													"    const tokenHeaderText = pm.response.headers.get('Authorization');",
+													"    pm.expect(tokenHeaderText).to.contain(\"Bearer \");",
+													"    const tokenText = tokenHeaderText.replace(\"Bearer \", \"\");",
+													"    pm.collectionVariables.set(\"bearerToken\", tokenText);",
+													"});"
+												],
+												"type": "text/javascript",
+												"id": "7f111ddc-eeb9-49bd-8d25-af2928d9f237"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"affinityGroup\": \"Individual\",\n    \"credentialStrength\": \"weak\",\n    \"confidenceLevel\": 50,\n    \"credId\": \"{{$randomAlphaNumeric}}\",\n    \"enrolments\": [\n        {\n            \"key\": \"HMCE-NCTS-ORG\",\n            \"state\": \"Activated\",\n            \"ttl\": 3600,\n            \"identifiers\": [\n                {\n                    \"key\": \"VatRegNoTURN\",\n                    \"value\": \"{{taxIdentifier}}\"\n                }\n            ]\n        }\n    ]\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{authLoginApiBaseUrl}}/government-gateway/session/login",
+											"host": [
+												"{{authLoginApiBaseUrl}}"
+											],
+											"path": [
+												"government-gateway",
+												"session",
+												"login"
+											]
+										}
+									},
+									"response": []
 								}
 							],
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"affinityGroup\": \"Individual\",\n    \"credentialStrength\": \"weak\",\n    \"confidenceLevel\": 50,\n    \"credId\": \"{{$randomAlphaNumeric}}\",\n    \"enrolments\": [\n        {\n            \"key\": \"HMCE-NCTS-ORG\",\n            \"state\": \"Activated\",\n            \"ttl\": 3600,\n            \"identifiers\": [\n                {\n                    \"key\": \"VatRegNoTURN\",\n                    \"value\": \"{{taxIdentifier}}\"\n                }\n            ]\n        }\n    ]\n}",
-									"options": {
-										"raw": {
-											"language": "json"
+							"protocolProfileBehavior": {},
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "DEV_Auth_Bearer Token",
+							"item": [
+								{
+									"name": "01- POST Auth Details",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "4a9045cb-79fb-4a57-8d61-01cea54950bd",
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"const $ = cheerio.load(responseBody);",
+													"var path;",
+													"",
+													"links = $('a'); //jquery get all hyperlinks",
+													"  $(links).each(function(i, link){",
+													"    if(i==5)",
+													"    {",
+													"      path = $(link).attr('href');",
+													"      var auth_id = path.split(\"=\")[1];",
+													"      pm.environment.set(\"auth_id\",auth_id)",
+													"   ",
+													"    }",
+													"  })",
+													""
+												],
+												"type": "text/javascript"
+											}
 										}
-									}
-								},
-								"url": {
-									"raw": "{{authLoginApiBaseUrl}}/government-gateway/session/login",
-									"host": [
-										"{{authLoginApiBaseUrl}}"
 									],
-									"path": [
-										"government-gateway",
-										"session",
-										"login"
-									]
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"type": "text"
+											},
+											{
+												"key": "",
+												"value": "",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "redirectionUrl",
+													"value": "https://www.development.tax.service.gov.uk/oauth/authorize?client_id={{client_Id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-guarantee-balance&response_type=code",
+													"type": "text"
+												},
+												{
+													"key": "credentialStrength",
+													"value": "strong",
+													"type": "text"
+												},
+												{
+													"key": "confidenceLevel",
+													"value": "200",
+													"type": "text"
+												},
+												{
+													"key": "nino",
+													"value": "AA000000A",
+													"type": "text"
+												},
+												{
+													"key": "affinityGroup",
+													"value": "Individual",
+													"type": "text"
+												},
+												{
+													"key": "authorityId",
+													"value": "abcd",
+													"type": "text"
+												},
+												{
+													"key": "enrolment[0].name",
+													"value": "HMCE-NCTS-ORG",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "enrolment[0].taxIdentifier[0].name",
+													"value": "VATRegNoTURN",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "enrolment[0].taxIdentifier[0].value",
+													"value": "9999999901",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "enrolment[0].state",
+													"value": "Activated",
+													"type": "text",
+													"disabled": true
+												}
+											],
+											"options": {
+												"urlencoded": {}
+											}
+										},
+										"url": {
+											"raw": "https://www.{{env}}.tax.service.gov.uk/auth-login-stub/gg-sign-in",
+											"protocol": "https",
+											"host": [
+												"www",
+												"{{env}}",
+												"tax",
+												"service",
+												"gov",
+												"uk"
+											],
+											"path": [
+												"auth-login-stub",
+												"gg-sign-in"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "02- GET Grant Auth 303",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"var responseBody = cheerio.load(pm.response.text());",
+													"var csrfToken = responseBody('[name=\"csrfToken\"]').val();",
+													"pm.environment.set(\"csrfToken\",csrfToken);"
+												],
+												"type": "text/javascript",
+												"id": "c0198333-26ca-444a-8d7f-690ead59e359"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"",
+													"",
+													""
+												],
+												"type": "text/javascript",
+												"id": "9b6d39c8-1f04-41f2-b781-d3d4d1c996eb"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {}
+											}
+										},
+										"url": {
+											"raw": "https://www.{{env}}.tax.service.gov.uk/oauth/grantscope?auth_id={{auth_id}}",
+											"protocol": "https",
+											"host": [
+												"www",
+												"{{env}}",
+												"tax",
+												"service",
+												"gov",
+												"uk"
+											],
+											"path": [
+												"oauth",
+												"grantscope"
+											],
+											"query": [
+												{
+													"key": "auth_id",
+													"value": "{{auth_id}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "03- POST Submit Grant Authority",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"var responseBody = cheerio.load(pm.response.text());",
+													"var code = (responseBody('title').text()).split(\"=\")[1]",
+													"",
+													"pm.environment.set(\"code\",code);",
+													""
+												],
+												"type": "text/javascript",
+												"id": "df31e1a7-9123-4fdd-aeaf-8c1f794ea4ba"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "csrfToken",
+													"value": "{{csrfToken}}",
+													"type": "text"
+												},
+												{
+													"key": "auth_id",
+													"value": "{{auth_id}}",
+													"type": "text"
+												}
+											],
+											"options": {
+												"urlencoded": {}
+											}
+										},
+										"url": {
+											"raw": "https://www.{{env}}.tax.service.gov.uk/oauth/grantscope",
+											"protocol": "https",
+											"host": [
+												"www",
+												"{{env}}",
+												"tax",
+												"service",
+												"gov",
+												"uk"
+											],
+											"path": [
+												"oauth",
+												"grantscope"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "04- Access Token",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"var accessToken = JSON.parse(responseBody);",
+													"pm.environment.set(\"access_token1\", accessToken.access_token);",
+													"",
+													"pm.environment.unset(\"auth_id\")",
+													"pm.environment.unset(\"csrfToken\")",
+													"pm.environment.unset(\"grant_scope\")",
+													"pm.environment.unset(\"code\")",
+													"",
+													"",
+													""
+												],
+												"type": "text/javascript",
+												"id": "4354588e-5f1c-47d4-a88e-fb97234d8307"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "code",
+													"value": "{{code}}",
+													"type": "text"
+												},
+												{
+													"key": "client_id",
+													"value": "{{client_Id}}",
+													"type": "text"
+												},
+												{
+													"key": "client_secret",
+													"value": "{{client_secret}}",
+													"type": "text"
+												},
+												{
+													"key": "grant_type",
+													"value": "authorization_code",
+													"type": "text"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "urn:ietf:wg:oauth:2.0:oob",
+													"type": "text"
+												}
+											],
+											"options": {
+												"urlencoded": {}
+											}
+										},
+										"url": {
+											"raw": "https://api.{{env}}.tax.service.gov.uk/oauth/token",
+											"protocol": "https",
+											"host": [
+												"api",
+												"{{env}}",
+												"tax",
+												"service",
+												"gov",
+												"uk"
+											],
+											"path": [
+												"oauth",
+												"token"
+											]
+										}
+									},
+									"response": []
 								}
-							},
-							"response": []
+							],
+							"protocolProfileBehavior": {},
+							"_postman_isSubFolder": true
 						}
-					]
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
 				},
 				{
 					"name": "Synchronous Balance Request Success",
@@ -87,6 +468,7 @@
 								{
 									"listen": "test",
 									"script": {
+										"id": "e6fa38e2-bf5b-4589-92b0-c569eea6b188",
 										"exec": [
 											"pm.test(\"Status code is 200 OK\", function () {",
 											"    pm.response.to.have.status(200);",
@@ -114,6 +496,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
+										"id": "75d65395-29b6-4632-889b-b0bb3dd572d6",
 										"exec": [
 											""
 										],
@@ -171,7 +554,8 @@
 									"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789012\");",
 									"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX2\");",
 									"pm.collectionVariables.set(\"accessCode\", \"ABC1\");"
-								]
+								],
+								"id": "5a48995a-4be6-418d-873a-dae49289e01a"
 							}
 						},
 						{
@@ -180,10 +564,13 @@
 								"type": "text/javascript",
 								"exec": [
 									""
-								]
+								],
+								"id": "9467a8b6-f740-4645-a331-5c514bf897b3"
 							}
 						}
-					]
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
 				},
 				{
 					"name": "Synchronous Balance Request Functional Error",
@@ -218,7 +605,8 @@
 											"});",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"id": "c1e3b894-d9bf-476a-ad0b-04a7d149c166"
 									}
 								},
 								{
@@ -227,7 +615,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"id": "65bb5d99-7c01-4df0-8b6e-e2f628fce58b"
 									}
 								}
 							],
@@ -281,7 +670,8 @@
 									"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789013\");",
 									"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX3\");",
 									"pm.collectionVariables.set(\"accessCode\", \"E906\");"
-								]
+								],
+								"id": "14aeeb99-97e0-4e9e-84b8-ca452d888e52"
 							}
 						},
 						{
@@ -290,10 +680,13 @@
 								"type": "text/javascript",
 								"exec": [
 									""
-								]
+								],
+								"id": "d744703b-9107-4f59-b2c2-5293132e7d65"
 							}
 						}
-					]
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
 				},
 				{
 					"name": "Synchronous Balance Request XML Error",
@@ -323,7 +716,8 @@
 											"});",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"id": "8dc2fab5-89d2-4794-ab9e-ffb226952934"
 									}
 								},
 								{
@@ -332,7 +726,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"id": "73faff00-c525-486b-be38-041969dbc33e"
 									}
 								}
 							],
@@ -386,7 +781,8 @@
 									"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789014\");",
 									"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX4\");",
 									"pm.collectionVariables.set(\"accessCode\", \"E917\");"
-								]
+								],
+								"id": "55d5b9dd-d57a-4c5a-abb7-5829fb07048a"
 							}
 						},
 						{
@@ -395,10 +791,13 @@
 								"type": "text/javascript",
 								"exec": [
 									""
-								]
+								],
+								"id": "96bf484e-a18b-4185-9102-09fcaaf03b34"
 							}
 						}
-					]
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
 				},
 				{
 					"name": "Asynchronous Balance Request Success",
@@ -428,7 +827,8 @@
 											"});",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"id": "8694fcd9-f267-4246-96b7-9430054f0be2"
 									}
 								}
 							],
@@ -491,7 +891,8 @@
 											"});",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"id": "a3dc0e14-466b-4586-ab37-22c6d02fa3e7"
 									}
 								}
 							],
@@ -541,7 +942,8 @@
 											"    pm.response.to.have.status(200);",
 											"});"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"id": "9ca79b32-1fcd-4b80-8295-9287162f73e4"
 									}
 								}
 							],
@@ -600,7 +1002,8 @@
 											"    pm.expect(responseJson.request.response.currency).to.be.a(\"string\");",
 											"});"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"id": "4de9a414-c54e-4c3b-b60f-a0bba84582ae"
 									}
 								}
 							],
@@ -658,7 +1061,8 @@
 								"exec": [
 									"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789015\");",
 									"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX5\");"
-								]
+								],
+								"id": "25f3f4b1-185e-474c-8bcf-56fc02953e39"
 							}
 						},
 						{
@@ -667,10 +1071,13 @@
 								"type": "text/javascript",
 								"exec": [
 									""
-								]
+								],
+								"id": "dde9045c-b349-4685-afed-832e95005b1b"
 							}
 						}
-					]
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
 				},
 				{
 					"name": "Asynchronous Balance Request Functional Error",
@@ -700,7 +1107,8 @@
 											"});",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"id": "b7910447-5adf-462a-8a0c-ab5f81324b2c"
 									}
 								}
 							],
@@ -763,7 +1171,8 @@
 											"});",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"id": "23067949-d67e-4ce4-a7b4-8fb53a3ac692"
 									}
 								}
 							],
@@ -813,7 +1222,8 @@
 											"    pm.response.to.have.status(200);",
 											"});"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"id": "efaf10ba-8623-40de-9554-33f4229b3ae2"
 									}
 								}
 							],
@@ -873,7 +1283,8 @@
 											"    pm.expect(responseJson.request.response.errors).to.not.be.empty;",
 											"});"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"id": "25683e3f-0a98-41da-af62-30d00ed9892d"
 									}
 								}
 							],
@@ -931,7 +1342,8 @@
 								"exec": [
 									"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789016\");",
 									"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX6\");"
-								]
+								],
+								"id": "74d2d6f8-d9f8-40fc-9c65-6965e69bbc99"
 							}
 						},
 						{
@@ -940,10 +1352,13 @@
 								"type": "text/javascript",
 								"exec": [
 									""
-								]
+								],
+								"id": "006099ed-1746-4169-9a74-56e978f57462"
 							}
 						}
-					]
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
 				},
 				{
 					"name": "Asynchronous Balance Request XML Error",
@@ -973,7 +1388,8 @@
 											"});",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"id": "29b1f2b3-100a-4244-b415-2fd567d6e5b6"
 									}
 								}
 							],
@@ -1036,7 +1452,8 @@
 											"});",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"id": "970237b2-057c-41e1-9757-fdfba24c4b77"
 									}
 								}
 							],
@@ -1086,7 +1503,8 @@
 											"    pm.response.to.have.status(200);",
 											"});"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"id": "a50cec32-0e67-405a-8e41-36e37afa73ec"
 									}
 								}
 							],
@@ -1143,7 +1561,8 @@
 											"});",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"id": "33f7a921-817d-45ba-a962-a055e331591e"
 									}
 								}
 							],
@@ -1201,7 +1620,8 @@
 								"exec": [
 									"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789017\");",
 									"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX7\");"
-								]
+								],
+								"id": "593162d2-bda3-4d1f-879c-632762c33dc8"
 							}
 						},
 						{
@@ -1210,34 +1630,49 @@
 								"type": "text/javascript",
 								"exec": [
 									""
-								]
+								],
+								"id": "fe4b77cf-0b28-4137-8456-2858b642f68d"
 							}
 						}
-					]
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"variable": [
 		{
+			"id": "0b77cc77-f233-4597-a4cd-1d6cb080945f",
 			"key": "taxIdentifier",
-			"value": ""
+			"value": "",
+			"type": "string"
 		},
 		{
+			"id": "4af2b950-337a-42a5-a84e-710734accdc4",
 			"key": "guaranteeReference",
-			"value": ""
+			"value": "",
+			"type": "string"
 		},
 		{
+			"id": "f3da1d6d-bdbc-4ed1-9748-c134737761ea",
 			"key": "accessCode",
-			"value": ""
+			"value": "",
+			"type": "string"
 		},
 		{
+			"id": "69600014-bb6f-4df5-a456-47bfb1469e19",
 			"key": "bearerToken",
-			"value": ""
+			"value": "",
+			"type": "string"
 		},
 		{
+			"id": "245f9e33-33d9-467c-8aaa-b0123cc80bf2",
 			"key": "balanceId",
-			"value": ""
+			"value": "",
+			"type": "string"
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }
