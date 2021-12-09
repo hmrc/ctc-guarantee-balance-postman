@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "CTC Guarantee Balance API Postman Tests",
   "scripts": {
-    "test": "newman run CTC_Guarantee_Balance.postman_collection.json -e Local.postman_environment.json --reporters cli,junit --reporter-junit-export target/smoke-test-reports/junit.xml"
+    "test": "newman run CTC_Guarantee_Balance.postman_collection.json -e Local.postman_environment.json --reporters cli,junit,htmlextra --reporter-junit-export target/smoke-test-reports/junit.xml"
   },
   "devDependencies": {
-    "newman": "^5.3.0"
+    "newman": "^5.3.0",
+    "newman-reporter-htmlextra": "^1.22.3"
+  },
+  "dependencies": {
+    "newman-reporter-html": "^1.0.5"
   }
 }

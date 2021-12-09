@@ -58,82 +58,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"affinityGroup\": \"Individual\",\n    \"credentialStrength\": \"weak\",\n    \"confidenceLevel\": 50,\n    \"credId\": \"{{$randomAlphaNumeric}}\",\n    \"enrolments\": [\n        {\n            \"key\": \"HMCE-NCTS-ORG\",\n            \"state\": \"Activated\",\n            \"ttl\": 3600,\n            \"identifiers\": [\n                {\n                    \"key\": \"VatRegNoTURN\",\n                    \"value\": \"{{taxIdentifier}}\"\n                }\n            ]\n        }\n    ]\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{authLoginApiBaseUrl}}/government-gateway/session/login",
-											"host": [
-												"{{authLoginApiBaseUrl}}"
-											],
-											"path": [
-												"government-gateway",
-												"session",
-												"login"
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						}
-					]
-				},
-				{
-					"name": "CTC_GB_Regression Pack Tests",
-					"item": [
-						{
-							"name": "Get Bearer Token",
-							"item": [
-								{
-									"name": "POST Auth Login API Bearer Token",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"pm.test(\"Status code is 201 CREATED\", function () {",
-													"    pm.response.to.have.status(201);",
-													"});",
-													"",
-													"pm.test(\"Response contains JSON\", function () {",
-													"    pm.expect(pm.response.to.have.jsonBody());",
-													"});",
-													"",
-													"pm.test(\"Response Authorization header contains bearer token\", function () {",
-													"    pm.expect(pm.response.headers.has('Authorization'));",
-													"    const tokenHeaderText = pm.response.headers.get('Authorization');",
-													"    pm.expect(tokenHeaderText).to.contain(\"Bearer \");",
-													"    const tokenText = tokenHeaderText.replace(\"Bearer \", \"\");",
-													"    pm.collectionVariables.set(\"bearerToken\", tokenText);",
-													"});"
-												],
-												"type": "text/javascript"
-											}
-										},
-										{
-											"listen": "prerequest",
-											"script": {
-												"exec": [
-													"pm.collectionVariables.set(\"bearerToken\", \"\");"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"auth": {
-											"type": "noauth"
-										},
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"affinityGroup\": \"Individual\",\n    \"credentialStrength\": \"weak\",\n    \"confidenceLevel\": 50,\n    \"credId\": \"{{$randomAlphaNumeric}}\",\n    \"enrolments\": [\n        {\n            \"key\": \"HMCE-NCTS-ORG\",\n            \"state\": \"Activated\",\n            \"ttl\": 3600,\n            \"identifiers\": [\n                {\n                    \"key\": \"VatRegNoTURN\",\n                    \"value\": \"{{taxIdentifier}}\"\n                }\n            ]\n        }\n    ]\n}",
+											"raw": "{\n    \"affinityGroup\": \"Individual\",\n    \"credentialStrength\": \"weak\",\n    \"confidenceLevel\": 50,\n    \"credId\": \"{{$randomAlphaNumeric}}\",\n    \"enrolments\": []\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -208,7 +133,82 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"affinityGroup\": \"Individual\",\n    \"credentialStrength\": \"weak\",\n    \"confidenceLevel\": 50,\n    \"credId\": \"{{$randomAlphaNumeric}}\",\n    \"enrolments\": [\n        {\n            \"key\": \"HMCE-NCTS-ORG\",\n            \"state\": \"Activated\",\n            \"ttl\": 3600,\n            \"identifiers\": [\n                {\n                    \"key\": \"VatRegNoTURN\",\n                    \"value\": \"{{taxIdentifier}}\"\n                }\n            ]\n        }\n    ]\n}",
+											"raw": "{\n    \"affinityGroup\": \"Individual\",\n    \"credentialStrength\": \"weak\",\n    \"confidenceLevel\": 50,\n    \"credId\": \"{{$randomAlphaNumeric}}\",\n    \"enrolments\": []\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{authLoginApiBaseUrl}}/government-gateway/session/login",
+											"host": [
+												"{{authLoginApiBaseUrl}}"
+											],
+											"path": [
+												"government-gateway",
+												"session",
+												"login"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "CTC_GB_Regression Tests",
+					"item": [
+						{
+							"name": "Get Bearer Token",
+							"item": [
+								{
+									"name": "POST Auth Login API Bearer Token",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201 CREATED\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													"",
+													"pm.test(\"Response contains JSON\", function () {",
+													"    pm.expect(pm.response.to.have.jsonBody());",
+													"});",
+													"",
+													"pm.test(\"Response Authorization header contains bearer token\", function () {",
+													"    pm.expect(pm.response.headers.has('Authorization'));",
+													"    const tokenHeaderText = pm.response.headers.get('Authorization');",
+													"    pm.expect(tokenHeaderText).to.contain(\"Bearer \");",
+													"    const tokenText = tokenHeaderText.replace(\"Bearer \", \"\");",
+													"    pm.collectionVariables.set(\"bearerToken\", tokenText);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.set(\"bearerToken\", \"\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"affinityGroup\": \"Individual\",\n    \"credentialStrength\": \"weak\",\n    \"confidenceLevel\": 50,\n    \"credId\": \"{{$randomAlphaNumeric}}\",\n    \"enrolments\": []\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -238,7 +238,107 @@
 									"name": "TC01_SBR_Success",
 									"item": [
 										{
-											"name": "POST Guarantee Balance Request",
+											"name": "POST-Request-IE034/CD034A - Valid",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"let requests = pm.collectionVariables.get(\"requests\");",
+															"",
+															"if(!requests || requests.length == 0) {",
+															"    requests = [{",
+															"\t\"taxIdentifier\": \"12345678996325874\",",
+															"\t\"guaranteeReference\": \"12345678901234567891234\",",
+															"\t\"accessCode\": \"1234\"",
+															"},",
+															"{",
+															"\t\"taxIdentifier\": \"GB123456789876543\",",
+															"\t\"guaranteeReference\": \"20GB0000010000GX\",",
+															"\t\"accessCode\": \"ABC1\"",
+															"},",
+															"{",
+															"\t\"taxIdentifier\": \"ABCDFRGTHUYJMKIYH\",",
+															"\t\"guaranteeReference\": \"abcvfghjkliuythnmjutred\",",
+															"\t\"accessCode\": \"ABCD\"",
+															"}",
+															"]",
+															"}",
+															"",
+															"var nextrequest = requests.shift();",
+															"pm.collectionVariables.set(\"taxIdentifier\",nextrequest.taxIdentifier);",
+															"pm.collectionVariables.set(\"guaranteeReference\",nextrequest.guaranteeReference);",
+															"pm.collectionVariables.set(\"accessCode\",nextrequest.accessCode);",
+															"pm.collectionVariables.set(\"requests\",requests);",
+															"",
+															"if(requests && requests.length > 0){",
+															"    postman.setNextRequest(\"POST-Request-IE034/CD034A - Valid\");",
+															"}else{",
+															"    postman.setNextRequest(\"POST-Response-IE037/CD037A - Valid\");",
+															"}"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 200 OK\", function () {",
+															"    pm.response.to.have.status(200);",
+															"});",
+															"",
+															"pm.test(\"Response body is JSON\", function() {",
+															"    pm.expect(pm.response.to.have.jsonBody());",
+															"});",
+															"",
+															"pm.test(\"Response body contains balance\", function () {",
+															"    const responseJson = pm.response.json();",
+															"    pm.expect(responseJson).to.be.an(\"object\");",
+															"    pm.expect(responseJson).to.have.property(\"response\");",
+															"    pm.expect(responseJson.response).to.be.an(\"object\");",
+															"    pm.expect(responseJson.response).to.have.property(\"balance\");",
+															"    pm.expect(responseJson.response.balance).to.be.a(\"number\");",
+															"    pm.expect(responseJson.response).to.have.property(\"currency\");",
+															"    pm.expect(responseJson.response.currency).to.be.a(\"string\");",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/vnd.hmrc.1.0+json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{apiBaseUrl}}/balances",
+													"host": [
+														"{{apiBaseUrl}}"
+													],
+													"path": [
+														"balances"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "POST-Response-IE037/CD037A - Valid",
 											"event": [
 												{
 													"listen": "test",
@@ -271,9 +371,38 @@
 													"listen": "prerequest",
 													"script": {
 														"exec": [
-															"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789012\");",
-															"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX2\");",
-															"pm.collectionVariables.set(\"accessCode\", \"ABC1\");"
+															"let requests = pm.collectionVariables.get(\"requests\");",
+															"",
+															"if(!requests || requests.length == 0) {",
+															"    requests = [{",
+															"\t\"taxIdentifier\": \"12345678996325\",",
+															"\t\"guaranteeReference\": \"1234567890123456789123\",",
+															"\t\"accessCode\": \"1234\"",
+															"},",
+															"{",
+															"\t\"taxIdentifier\": \"GB1234778BB00\",",
+															"\t\"guaranteeReference\": \"20GB0000000GX\",",
+															"\t\"accessCode\": \"ABC1\"",
+															"},",
+															"{",
+															"\t\"taxIdentifier\": \"ABCDFRGTHUYJMKI\",",
+															"\t\"guaranteeReference\": \"abcvfghjkliuythnmjutr\",",
+															"\t\"accessCode\": \"ABCD\"",
+															"}",
+															"]",
+															"}",
+															"",
+															"var nextrequest = requests.shift();",
+															"pm.collectionVariables.set(\"taxIdentifier\",nextrequest.taxIdentifier);",
+															"pm.collectionVariables.set(\"guaranteeReference\",nextrequest.guaranteeReference);",
+															"pm.collectionVariables.set(\"accessCode\",nextrequest.accessCode);",
+															"pm.collectionVariables.set(\"requests\",requests);",
+															"",
+															"if(requests && requests.length > 0){",
+															"    postman.setNextRequest(\"POST-Response-IE037/CD037A - Valid\");",
+															"}else{",
+															"    postman.setNextRequest(\"POST-IE906/CD906A-Functional Error\");",
+															"}"
 														],
 														"type": "text/javascript"
 													}
@@ -345,7 +474,7 @@
 									"name": "TC02_SBR_Functional Error",
 									"item": [
 										{
-											"name": "POST Guarantee Balance Request",
+											"name": "POST-IE906/CD906A-Functional Error",
 											"event": [
 												{
 													"listen": "test",
@@ -372,6 +501,11 @@
 															"    pm.expect(responseJson.response.errors).to.be.an(\"array\");",
 															"    pm.expect(responseJson.response.errors).to.not.be.empty;",
 															"});",
+															"",
+															"pm.collectionVariables.unset(\"taxIdentifier\");",
+															"pm.collectionVariables.unset(\"guaranteeReference\");",
+															"pm.collectionVariables.unset(\"accessCode\");",
+															"",
 															""
 														],
 														"type": "text/javascript"
@@ -381,8 +515,15 @@
 													"listen": "prerequest",
 													"script": {
 														"exec": [
+															"function randomString(length, chars) {",
+															"    var result = '';",
+															"    for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];",
+															"    return result;",
+															"}",
+															"var rString = randomString(24, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');",
+															"",
 															"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789013\");",
-															"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX3\");",
+															"pm.collectionVariables.set(\"guaranteeReference\", rString);",
 															"pm.collectionVariables.set(\"accessCode\", \"E906\");"
 														],
 														"type": "text/javascript"
@@ -455,7 +596,7 @@
 									"name": "TC03_SBR_XML Error",
 									"item": [
 										{
-											"name": "POST Guarantee Balance Request",
+											"name": "POST-IE917/CC917A-XML Error",
 											"event": [
 												{
 													"listen": "test",
@@ -465,17 +606,17 @@
 															"    pm.response.to.have.status(500);",
 															"});",
 															"",
-															"pm.test(\"Response body is JSON\", function() {",
+															"pm.test(\"Response body is JSON\", function () {",
 															"    pm.expect(pm.response.to.have.jsonBody());",
 															"});",
 															"",
 															"pm.test(\"Response body contains errors\", function () {",
 															"    const responseJson = pm.response.json();",
 															"    pm.expect(responseJson).to.be.an(\"object\");",
-															"    pm.expect(responseJson).to.have.property(\"code\");",
-															"    pm.expect(responseJson.code).to.eql(\"INTERNAL_SERVER_ERROR\");",
 															"    pm.expect(responseJson).to.have.property(\"message\");",
 															"    pm.expect(responseJson.message).to.eql(\"Internal server error\");",
+															"    pm.expect(responseJson).to.have.property(\"code\");",
+															"    pm.expect(responseJson.code).to.eql(\"INTERNAL_SERVER_ERROR\");",
 															"});",
 															""
 														],
@@ -486,8 +627,15 @@
 													"listen": "prerequest",
 													"script": {
 														"exec": [
-															"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789014\");",
-															"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX4\");",
+															"function randomString(length, chars) {",
+															"    var result = '';",
+															"    for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];",
+															"    return result;",
+															"}",
+															"var gRString = randomString(23, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');",
+															"",
+															"pm.collectionVariables.set(\"taxIdentifier\", \"GB12345678901312\");",
+															"pm.collectionVariables.set(\"guaranteeReference\",gRString);",
 															"pm.collectionVariables.set(\"accessCode\", \"E917\");"
 														],
 														"type": "text/javascript"
@@ -557,10 +705,10 @@
 									]
 								},
 								{
-									"name": "TC04_SBR_Failure_TaxIdetifier",
+									"name": "TC04_SBR_Invalid_TaxIdetifier",
 									"item": [
 										{
-											"name": "POST Guarantee Balance Request",
+											"name": "POST-IE034/CD034A-Invalid Taxidnetifier",
 											"event": [
 												{
 													"listen": "test",
@@ -581,11 +729,12 @@
 															"    pm.expect(responseJson.message).to.eql(\"Bad request\");",
 															"    pm.expect(responseJson).to.have.property(\"errors\");",
 															"    pm.expect(responseJson.errors).to.be.an(\"array\");",
-															" //   pm.expect(responseJson.response.errors.message).to.eql(\"Invalid tax identifier value\");",
 															"    pm.expect(responseJson.errors).to.not.be.empty;",
-															"    //console.log(pm.expect(responseJson.errors.reason).toString);",
+															"    pm.expect(responseJson.errors[0].message).to.eql(\"Invalid tax identifier value\");",
+															"    console.log(responseJson.errors[0].reason);",
 															"});",
-															""
+															"",
+															"//pm.collectionVariables.unset(\"requests\");"
 														],
 														"type": "text/javascript"
 													}
@@ -594,11 +743,38 @@
 													"listen": "prerequest",
 													"script": {
 														"exec": [
-															"pm.collectionVariables.set(\"taxIdentifier\", \"123456789101112131\");",
-															"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX4\");",
-															"pm.collectionVariables.set(\"accessCode\", \"ABC1\");",
+															"let requests = pm.collectionVariables.get(\"requests\");",
 															"",
-															""
+															"if(!requests || requests.length == 0) {",
+															"    requests = [{",
+															"\t\"taxIdentifier\": \"123451234567891011121314\",",
+															"\t\"guaranteeReference\": \"20GB000001\",",
+															"\t\"accessCode\": \"ABC1\"",
+															"},",
+															"{",
+															"\t\"taxIdentifier\": \"123 % $ % ^ &$%£\",",
+															"\t\"guaranteeReference\": \"20GB0000010000GX\",",
+															"\t\"accessCode\": \"ABC1\"",
+															"},",
+															"{",
+															"\t\"taxIdentifier\": \"\",",
+															"\t\"guaranteeReference\": \"20GB0000010000GX4\",",
+															"\t\"accessCode\": \"ABC1\"",
+															"}",
+															"]",
+															"}",
+															"",
+															"var nextrequest = requests.shift();",
+															"pm.collectionVariables.set(\"taxIdentifier\",nextrequest.taxIdentifier);",
+															"pm.collectionVariables.set(\"guaranteeReference\",nextrequest.guaranteeReference);",
+															"pm.collectionVariables.set(\"accessCode\",nextrequest.accessCode);",
+															"pm.collectionVariables.set(\"requests\",requests);",
+															"",
+															"if(requests && requests.length > 0){",
+															"    postman.setNextRequest(\"POST-IE034/CD034A-Invalid Taxidnetifier\");",
+															"}else{",
+															"    postman.setNextRequest(\"POST-IE034/CD034A-No Taxidentifier\");",
+															"}"
 														],
 														"type": "text/javascript"
 													}
@@ -616,6 +792,182 @@
 												"body": {
 													"mode": "raw",
 													"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{apiBaseUrl}}/balances",
+													"host": [
+														"{{apiBaseUrl}}"
+													],
+													"path": [
+														"balances"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "POST-IE034/CD034A-No Taxidentifier",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"let TC04_requests = pm.collectionVariables.get(\"TC04_requests\");",
+															"",
+															"if(!TC04_requests || TC04_requests.length == 0) {",
+															"    TC04_requests = [{",
+															"\t\"guaranteeReference\": \"12345678901234567891234\",",
+															"\t\"accessCode\": \"1234\"",
+															"}",
+															"]",
+															"}",
+															"",
+															"var nextrequest = TC04_requests.shift();",
+															"pm.collectionVariables.set(\"req_body\",JSON.stringify(nextrequest));",
+															"pm.collectionVariables.set(\"TC04_requests\",TC04_requests);",
+															"",
+															"if(TC04_requests && TC04_requests.length > 0){",
+															"    postman.setNextRequest(\"POST-IE034/CD034A-No Taxidentifier\");",
+															"}else{",
+															"    postman.setNextRequest(\"POST-IE034/CD034A-Pasing Json\");",
+															"}"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 400 OK\", function () {",
+															"    pm.response.to.have.status(400);",
+															"});",
+															"",
+															"pm.test(\"Response body is JSON\", function() {",
+															"    pm.expect(pm.response.to.have.jsonBody());",
+															"});",
+															"",
+															"pm.test(\"Response body contains balance\", function () {",
+															"    const responseJson = pm.response.json();",
+															"    pm.expect(responseJson).to.be.an(\"object\");",
+															"    pm.expect(responseJson).to.have.property(\"code\");",
+															"    pm.expect(responseJson.code).to.eql(\"INVALID_REQUEST_JSON\");",
+															"    console.log(responseJson.message);",
+															"    pm.expect(responseJson).to.have.property(\"errors\");",
+															"    pm.expect(responseJson.errors).to.be.an(\"object\");",
+															"    pm.expect(responseJson.errors).to.have.property(\"$.taxIdentifier\");",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/vnd.hmrc.1.0+json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{{req_body}}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{apiBaseUrl}}/balances",
+													"host": [
+														"{{apiBaseUrl}}"
+													],
+													"path": [
+														"balances"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "POST-IE034/CD034A-Pasing Json",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 400 OK\", function () {",
+															"    pm.response.to.have.status(400);",
+															"});",
+															"",
+															"pm.test(\"Response body is JSON\", function() {",
+															"    pm.expect(pm.response.to.have.jsonBody());",
+															"});",
+															"",
+															"pm.test(\"Response body contains balance\", function () {",
+															"    const responseJson = pm.response.json();",
+															"    pm.expect(responseJson).to.be.an(\"object\");",
+															"    pm.expect(responseJson).to.have.property(\"code\");",
+															"    pm.expect(responseJson.code).to.eql(\"INVALID_REQUEST_JSON\");",
+															"    console.log(responseJson.message);",
+															"    pm.expect(responseJson).to.have.property(\"errors\");",
+															"    pm.expect(responseJson.errors).to.be.an(\"object\");",
+															"    pm.expect(responseJson.errors).to.have.property(\"$.taxIdentifier\");",
+															"    //console.log(responseJson.$.taxIdentifier[0]);",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"let TC4_requests = pm.collectionVariables.get(\"TC4_requests\");",
+															"",
+															"if(!TC4_requests || TC4_requests.length == 0) {",
+															"    TC4_requests = [{",
+															"    \"taxIdentifier\": {\"number\": 1},",
+															"\t\"guaranteeReference\": \"12345678901234567891234\",",
+															"\t\"accessCode\": \"1234\"",
+															"}",
+															"]",
+															"}",
+															"",
+															"var nextrequest = TC4_requests.shift();",
+															"pm.collectionVariables.set(\"req_body\",JSON.stringify(nextrequest));",
+															"pm.collectionVariables.set(\"TC4_requests\",TC4_requests);",
+															"",
+															"if(TC4_requests && TC4_requests.length > 0){",
+															"    postman.setNextRequest(\"POST-IE034/CD034A-Pasing Json\");",
+															"}else{",
+															"    postman.setNextRequest(\"POST-IE034/CD034A-Invalid GuaranteeRef\");",
+															"}"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/vnd.hmrc.1.0+json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{{req_body}}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -667,10 +1019,10 @@
 									]
 								},
 								{
-									"name": "TC05-SBR_Failure_GuaranteeRef",
+									"name": "TC05-SBR_Invalid_GuaranteeRef",
 									"item": [
 										{
-											"name": "POST Guarantee Balance Request",
+											"name": "POST-IE034/CD034A-Invalid GuaranteeRef",
 											"event": [
 												{
 													"listen": "test",
@@ -693,7 +1045,7 @@
 															"    pm.expect(responseJson.errors).to.be.an(\"array\");",
 															"    pm.expect(responseJson.errors).to.not.be.empty;",
 															"    pm.expect(responseJson.errors[0].message).to.eql(\"Invalid guarantee reference value\");",
-															"    //console.log(pm.expect(responseJson.errors.reason).toString);",
+															"    console.log(responseJson.errors[0].reason);",
 															"});",
 															""
 														],
@@ -704,24 +1056,37 @@
 													"listen": "prerequest",
 													"script": {
 														"exec": [
-															"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789012\");",
-															"pm.collectionVariables.set(\"accessCode\", \"ABC1\");",
+															"let requests = pm.collectionVariables.get(\"requests\");",
 															"",
-															"let guaranteeReference = pm.collectionVariables.get(\"guaranteeReferences\");",
-															"",
-															"if(!guaranteeReference || guaranteeReference.length == 0) {",
-															"    guaranteeReference = [\"ABC1287945645555112454545\",\"12345$%^&\",\"\"];",
+															"if(!requests || requests.length == 0) {",
+															"    requests = [{",
+															"\t\"taxIdentifier\": \"1234567891\",",
+															"\t\"guaranteeReference\": \"20780000010000GX412345677\",",
+															"\t\"accessCode\": \"ABC1\"",
+															"},",
+															"{",
+															"\t\"taxIdentifier\": \"GB123456789876543\",",
+															"\t\"guaranteeReference\": \"ABC@£$$%%^&*\",",
+															"\t\"accessCode\": \"ABC1\"",
+															"},",
+															"{",
+															"\t\"taxIdentifier\": \"ABCDFRGTHUYJMKIYH\",",
+															"\t\"guaranteeReference\": \"\",",
+															"\t\"accessCode\": \"ABC1\"",
+															"}",
+															"]",
 															"}",
 															"",
-															"var guaranteeReference_num = guaranteeReference.shift();",
-															"pm.collectionVariables.set(\"guaranteeReference\",guaranteeReference_num);",
-															"pm.collectionVariables.set(\"guaranteeReferences\",guaranteeReference);",
+															"var nextrequest = requests.shift();",
+															"pm.collectionVariables.set(\"taxIdentifier\",nextrequest.taxIdentifier);",
+															"pm.collectionVariables.set(\"guaranteeReference\",nextrequest.guaranteeReference);",
+															"pm.collectionVariables.set(\"accessCode\",nextrequest.accessCode);",
+															"pm.collectionVariables.set(\"requests\",requests);",
 															"",
-															"",
-															"if(guaranteeReference && guaranteeReference.length > 0){",
-															"    postman.setNextRequest(\"POST Guarantee Balance Request\");",
+															"if(requests && requests.length > 0){",
+															"    postman.setNextRequest(\"POST-IE034/CD034A-Invalid GuaranteeRef\");",
 															"}else{",
-															"    postman.setNextRequest(null);",
+															"    postman.setNextRequest(\"POST-IE034/CD034A-No GuaranteeRef\");",
 															"}"
 														],
 														"type": "text/javascript"
@@ -740,6 +1105,185 @@
 												"body": {
 													"mode": "raw",
 													"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{apiBaseUrl}}/balances",
+													"host": [
+														"{{apiBaseUrl}}"
+													],
+													"path": [
+														"balances"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "POST-IE034/CD034A-No GuaranteeRef",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"let TC05_requests = pm.collectionVariables.get(\"TC05_requests\");",
+															"",
+															"if(!TC05_requests || TC05_requests.length == 0) {",
+															"    TC05_requests = [{",
+															"",
+															"\t\"taxIdentifier\": \"ABCDFRGTHUYJMKIYH\",",
+															"    \"accessCode\": \"ABCD\"",
+															"\t",
+															"}",
+															"]",
+															"}",
+															"",
+															"var nextrequest = TC05_requests.shift();",
+															"pm.collectionVariables.set(\"req_body\",JSON.stringify(nextrequest));",
+															"pm.collectionVariables.set(\"TC05_requests\",TC05_requests);",
+															"",
+															"if(TC05_requests && TC05_requests.length > 0){",
+															"    postman.setNextRequest(\"POST-IE034/CD034A-No GuaranteeRef\");",
+															"}else{",
+															"    postman.setNextRequest(\"POST-IE034/CD034A-Pasing Null\");",
+															"}"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 400 OK\", function () {",
+															"    pm.response.to.have.status(400);",
+															"});",
+															"",
+															"pm.test(\"Response body is JSON\", function() {",
+															"    pm.expect(pm.response.to.have.jsonBody());",
+															"});",
+															"",
+															"pm.test(\"Response body contains balance\", function () {",
+															"    const responseJson = pm.response.json();",
+															"    pm.expect(responseJson).to.be.an(\"object\");",
+															"    pm.expect(responseJson).to.have.property(\"code\");",
+															"    pm.expect(responseJson.code).to.eql(\"INVALID_REQUEST_JSON\");",
+															"    console.log(responseJson.message);",
+															"    pm.expect(responseJson).to.have.property(\"errors\");",
+															"    pm.expect(responseJson.errors).to.be.an(\"object\");",
+															"    pm.expect(responseJson.errors).to.have.property(\"$.guaranteeReference\");",
+															"});",
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/vnd.hmrc.1.0+json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{{req_body}}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{apiBaseUrl}}/balances",
+													"host": [
+														"{{apiBaseUrl}}"
+													],
+													"path": [
+														"balances"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "POST-IE034/CD034A-Pasing Null",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 400 OK\", function () {",
+															"    pm.response.to.have.status(400);",
+															"});",
+															"",
+															"pm.test(\"Response body is JSON\", function() {",
+															"    pm.expect(pm.response.to.have.jsonBody());",
+															"});",
+															"",
+															"pm.test(\"Response body contains balance\", function () {",
+															"    const responseJson = pm.response.json();",
+															"    pm.expect(responseJson).to.be.an(\"object\");",
+															"    pm.expect(responseJson).to.have.property(\"code\");",
+															"    pm.expect(responseJson.code).to.eql(\"INVALID_REQUEST_JSON\");",
+															"    console.log(responseJson.message);",
+															"    pm.expect(responseJson).to.have.property(\"errors\");",
+															"    pm.expect(responseJson.errors).to.be.an(\"object\");",
+															"    pm.expect(responseJson.errors).to.have.property(\"$.guaranteeReference\");",
+															"    //console.log(responseJson.$.taxIdentifier[0]);",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"let TC5_requests = pm.collectionVariables.get(\"TC5_requests\");",
+															"",
+															"if(!TC5_requests || TC5_requests.length == 0) {",
+															"    TC5_requests = [{",
+															"    \"taxIdentifier\":\"GBX456700B\",",
+															"\t\"guaranteeReference\": null,",
+															"\t\"accessCode\": \"GB12\"",
+															"}",
+															"]",
+															"}",
+															"",
+															"var nextrequest = TC5_requests.shift();",
+															"pm.collectionVariables.set(\"req_body\",JSON.stringify(nextrequest));",
+															"pm.collectionVariables.set(\"TC5_requests\",TC5_requests);",
+															"",
+															"if(TC5_requests && TC5_requests.length > 0){",
+															"    postman.setNextRequest(\"POST-IE034/CD034A-Pasing Null\");",
+															"}else{",
+															"    postman.setNextRequest(\"POST-IE034/CD034A-Invalid AccessCode\");",
+															"}"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/vnd.hmrc.1.0+json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{{req_body}}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -791,11 +1335,51 @@
 									]
 								},
 								{
-									"name": "TC06-SBR_Failure_AccessCode",
+									"name": "TC06-SBR_Invalid_AccessCode",
 									"item": [
 										{
-											"name": "POST Guarantee Balance Request",
+											"name": "POST-IE034/CD034A-Invalid AccessCode",
 											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"let requests = pm.collectionVariables.get(\"requests\");",
+															"",
+															"if(!requests || requests.length == 0) {",
+															"    requests = [{",
+															"\t\"taxIdentifier\": \"1234567891\",",
+															"\t\"guaranteeReference\": \"123456789012345678912345\",",
+															"\t\"accessCode\": \"12345\"",
+															"},",
+															"{",
+															"\t\"taxIdentifier\": \"GB123456789876543\",",
+															"\t\"guaranteeReference\": \"20GB0000010000GX\",",
+															"\t\"accessCode\": \"£$%^\"",
+															"},",
+															"{",
+															"\t\"taxIdentifier\": \"ABCDFRGTHUYJMKIYH\",",
+															"\t\"guaranteeReference\": \"abcvfghjkliuythnmjutred\",",
+															"\t\"accessCode\": \"\"",
+															"}",
+															"]",
+															"}",
+															"",
+															"var nextrequest = requests.shift();",
+															"pm.collectionVariables.set(\"taxIdentifier\",nextrequest.taxIdentifier);",
+															"pm.collectionVariables.set(\"guaranteeReference\",nextrequest.guaranteeReference);",
+															"pm.collectionVariables.set(\"accessCode\",nextrequest.accessCode);",
+															"pm.collectionVariables.set(\"requests\",requests);",
+															"",
+															"if(requests && requests.length > 0){",
+															"    postman.setNextRequest(\"POST-IE034/CD034A-Invalid AccessCode\");",
+															"}else{",
+															"    postman.setNextRequest(\"POST-IE034/CD034A-No AccessCode\");",
+															"}"
+														],
+														"type": "text/javascript"
+													}
+												},
 												{
 													"listen": "test",
 													"script": {
@@ -817,9 +1401,160 @@
 															"    pm.expect(responseJson.errors).to.be.an(\"array\");",
 															"    pm.expect(responseJson.errors).to.not.be.empty;",
 															"    pm.expect(responseJson.errors[0].message).to.eql(\"Invalid access code value\");",
-															"    pm.expect(responseJson.errors[1].message).to.eql(\"Invalid access code value\");",
+															"    console.log(responseJson.errors[0].reason);",
 															"});",
 															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/vnd.hmrc.1.0+json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{apiBaseUrl}}/balances",
+													"host": [
+														"{{apiBaseUrl}}"
+													],
+													"path": [
+														"balances"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "POST-IE034/CD034A-No AccessCode",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"let TC06_requests = pm.collectionVariables.get(\"TC06_requests\");",
+															"",
+															"if(!TC06_requests || TC06_requests.length == 0) {",
+															"    TC06_requests = [{",
+															"",
+															"\t\"taxIdentifier\": \"ABCDFRGTHUYJMKIYH\",",
+															"\t\"guaranteeReference\": \"abcvfghjkliuythnmjutred\",",
+															"\t",
+															"}",
+															"]",
+															"}",
+															"",
+															"var nextrequest = TC06_requests.shift();",
+															"pm.collectionVariables.set(\"req_body\",JSON.stringify(nextrequest));",
+															"pm.collectionVariables.set(\"TC06_requests\",TC06_requests);",
+															"",
+															"if(TC06_requests && TC06_requests.length > 0){",
+															"    postman.setNextRequest(\"POST-IE034/CD034A-No AccessCode\");",
+															"}else{",
+															"    postman.setNextRequest(\"POST-IE034/CD034A-Pasing Array\");",
+															"}"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 400 OK\", function () {",
+															"    pm.response.to.have.status(400);",
+															"});",
+															"",
+															"pm.test(\"Response body is JSON\", function() {",
+															"    pm.expect(pm.response.to.have.jsonBody());",
+															"});",
+															"",
+															"pm.test(\"Response body contains balance\", function () {",
+															"    const responseJson = pm.response.json();",
+															"    pm.expect(responseJson).to.be.an(\"object\");",
+															"    pm.expect(responseJson).to.have.property(\"code\");",
+															"    pm.expect(responseJson.code).to.eql(\"INVALID_REQUEST_JSON\");",
+															"    console.log(responseJson.message);",
+															"    pm.expect(responseJson).to.have.property(\"errors\");",
+															"    pm.expect(responseJson.errors).to.be.an(\"object\");",
+															"    pm.expect(responseJson.errors).to.have.property(\"$.accessCode\");",
+															"});",
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/vnd.hmrc.1.0+json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{{req_body}}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{apiBaseUrl}}/balances",
+													"host": [
+														"{{apiBaseUrl}}"
+													],
+													"path": [
+														"balances"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "POST-IE034/CD034A-Pasing Array",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 400 OK\", function () {",
+															"    pm.response.to.have.status(400);",
+															"});",
+															"",
+															"pm.test(\"Response body is JSON\", function() {",
+															"    pm.expect(pm.response.to.have.jsonBody());",
+															"});",
+															"",
+															"pm.test(\"Response body contains balance\", function () {",
+															"    const responseJson = pm.response.json();",
+															"    pm.expect(responseJson).to.be.an(\"object\");",
+															"    pm.expect(responseJson).to.have.property(\"code\");",
+															"    pm.expect(responseJson.code).to.eql(\"INVALID_REQUEST_JSON\");",
+															"    console.log(responseJson.message);",
+															"    pm.expect(responseJson).to.have.property(\"errors\");",
+															"    pm.expect(responseJson.errors).to.be.an(\"object\");",
+															"    pm.expect(responseJson.errors).to.have.property(\"$.accessCode\");",
+															"    //console.log(responseJson.$.taxIdentifier[0]);",
+															"});"
 														],
 														"type": "text/javascript"
 													}
@@ -828,24 +1563,25 @@
 													"listen": "prerequest",
 													"script": {
 														"exec": [
-															"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789012\");",
-															"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX4\");",
+															"let TC6_requests = pm.collectionVariables.get(\"TC6_requests\");",
 															"",
-															"let accessCode = pm.collectionVariables.get(\"accessCodes\");",
-															"",
-															"if(!accessCode || accessCode.length == 0) {",
-															"    accessCode = [\"ABC12\",\"12345$%^&\",\"\"];",
+															"if(!TC6_requests || TC6_requests.length == 0) {",
+															"    TC6_requests = [{",
+															"    \"taxIdentifier\":\"GBX456700B\",",
+															"\t\"guaranteeReference\": \"GBX456700BBGTG34\",",
+															"\t\"accessCode\": [\"GB12\"]",
+															"}",
+															"]",
 															"}",
 															"",
-															"var accessCode_num = accessCode.shift();",
-															"pm.collectionVariables.set(\"accessCode\",accessCode_num);",
-															"pm.collectionVariables.set(\"accessCodes\",accessCode);",
+															"var nextrequest = TC6_requests.shift();",
+															"pm.collectionVariables.set(\"req_body\",JSON.stringify(nextrequest));",
+															"pm.collectionVariables.set(\"TC6_requests\",TC6_requests);",
 															"",
-															"",
-															"if(accessCode && accessCode.length > 0){",
-															"    postman.setNextRequest(\"POST Guarantee Balance Request\");",
+															"if(TC6_requests && TC6_requests.length > 0){",
+															"    postman.setNextRequest(\"POST-IE034/CD034A-Pasing Array\");",
 															"}else{",
-															"    postman.setNextRequest(null);",
+															"    postman.setNextRequest(\"POST-E034/CD034A-Valid\");",
 															"}"
 														],
 														"type": "text/javascript"
@@ -863,241 +1599,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
-													"options": {
-														"raw": {
-															"language": "json"
-														}
-													}
-												},
-												"url": {
-													"raw": "{{apiBaseUrl}}/balances",
-													"host": [
-														"{{apiBaseUrl}}"
-													],
-													"path": [
-														"balances"
-													]
-												}
-											},
-											"response": []
-										}
-									],
-									"auth": {
-										"type": "bearer",
-										"bearer": [
-											{
-												"key": "token",
-												"value": "{{bearerToken}}",
-												"type": "string"
-											}
-										]
-									},
-									"event": [
-										{
-											"listen": "prerequest",
-											"script": {
-												"type": "text/javascript",
-												"exec": [
-													""
-												]
-											}
-										},
-										{
-											"listen": "test",
-											"script": {
-												"type": "text/javascript",
-												"exec": [
-													""
-												]
-											}
-										}
-									]
-								},
-								{
-									"name": "TC07-SBR_Failure multiple data sets",
-									"item": [
-										{
-											"name": "POST Guarantee Balance Request",
-											"event": [
-												{
-													"listen": "test",
-													"script": {
-														"exec": [
-															"const taxIdentifiers = pm.collectionVariables.get(\"taxIdentifiers\");",
-															"",
-															"if(taxIdentifiers && taxIdentifiers.length > 0){",
-															"    postman.setNextRequest(\"POST Guarantee Balance Request\");",
-															"}else{",
-															"    postman.setNextRequest(null);",
-															"}",
-															"",
-															"",
-															"pm.test(\"Status code is 400 BAD REQUEST\", function () {",
-															"    pm.response.to.have.status(400);",
-															"});",
-															"",
-															"pm.test(\"Response body is JSON\", function() {",
-															"    pm.expect(pm.response.to.have.jsonBody());",
-															"});",
-															"",
-															"pm.test(\"Response body contains errors\", function () {",
-															"    const responseJson = pm.response.json();",
-															"    pm.expect(responseJson).to.be.an(\"object\");",
-															"    pm.expect(responseJson).to.have.property(\"message\");",
-															"    pm.expect(responseJson.message).to.eql(\"Bad request\");",
-															"    pm.expect(responseJson).to.have.property(\"errors\");",
-															"    pm.expect(responseJson.errors).to.be.an(\"array\");",
-															"    pm.expect(responseJson.errors).to.not.be.empty;",
-															"    pm.expect(responseJson.errors[0].message).to.eql(\"Invalid tax identifier value\");",
-															"    //pm.expect(responseJson.errors[1].message).to.eql(\"Invalid tax identifier value\");",
-															"    //console.log(pm.expect(responseJson.response.errors.reason).toString);",
-															"});",
-															""
-														],
-														"type": "text/javascript"
-													}
-												},
-												{
-													"listen": "prerequest",
-													"script": {
-														"exec": [
-															"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX4\");",
-															"pm.collectionVariables.set(\"accessCode\", \"ABC1\");",
-															"",
-															"let taxIdentifiers = pm.collectionVariables.get(\"taxIdentifiers\");",
-															"",
-															"if(!taxIdentifiers || taxIdentifiers.length == 0) {",
-															"    taxIdentifiers = [\"1234567891011121314\",\"1234£$%^&\",\"\"];",
-															"}",
-															"",
-															"var taxIdentifier_num = taxIdentifiers.shift();",
-															"pm.collectionVariables.set(\"taxIdentifier\",taxIdentifier_num);",
-															"pm.collectionVariables.set(\"taxIdentifiers\",taxIdentifiers);"
-														],
-														"type": "text/javascript"
-													}
-												}
-											],
-											"request": {
-												"method": "POST",
-												"header": [
-													{
-														"key": "Accept",
-														"value": "application/vnd.hmrc.1.0+json",
-														"type": "text"
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
-													"options": {
-														"raw": {
-															"language": "json"
-														}
-													}
-												},
-												"url": {
-													"raw": "{{apiBaseUrl}}/balances",
-													"host": [
-														"{{apiBaseUrl}}"
-													],
-													"path": [
-														"balances"
-													]
-												}
-											},
-											"response": []
-										}
-									],
-									"auth": {
-										"type": "bearer",
-										"bearer": [
-											{
-												"key": "token",
-												"value": "{{bearerToken}}",
-												"type": "string"
-											}
-										]
-									},
-									"event": [
-										{
-											"listen": "prerequest",
-											"script": {
-												"type": "text/javascript",
-												"exec": [
-													""
-												]
-											}
-										},
-										{
-											"listen": "test",
-											"script": {
-												"type": "text/javascript",
-												"exec": [
-													""
-												]
-											}
-										}
-									]
-								},
-								{
-									"name": "TC08-SBR_taxIdentifier External file",
-									"item": [
-										{
-											"name": "POST Guarantee Balance Request",
-											"event": [
-												{
-													"listen": "test",
-													"script": {
-														"exec": [
-															"pm.test(\"Status code is 400 BAD REQUEST\", function () {",
-															"    pm.response.to.have.status(400);",
-															"});",
-															"",
-															"pm.test(\"Response body is JSON\", function() {",
-															"    pm.expect(pm.response.to.have.jsonBody());",
-															"});",
-															"",
-															"pm.test(\"Response body contains errors\", function () {",
-															"    const responseJson = pm.response.json();",
-															"    pm.expect(responseJson).to.be.an(\"object\");",
-															"    pm.expect(responseJson).to.have.property(\"message\");",
-															"    pm.expect(responseJson.message).to.eql(\"Bad request\");",
-															"    pm.expect(responseJson).to.have.property(\"errors\");",
-															"    pm.expect(responseJson.errors).to.be.an(\"array\");",
-															"    pm.expect(responseJson.errors).to.not.be.empty;",
-															"    pm.expect(responseJson.errors[0].message).to.eql(\"Invalid tax identifier value\");",
-															"    //pm.expect(responseJson.errors[1].message).to.eql(\"Invalid tax identifier value\");",
-															"    //console.log(pm.expect(responseJson.response.errors.reason).toString);",
-															"});",
-															""
-														],
-														"type": "text/javascript"
-													}
-												},
-												{
-													"listen": "prerequest",
-													"script": {
-														"exec": [
-															"pm.globals.set(\"jsonBody\",JSON.stringify(pm.iterationData.toObject()));"
-														],
-														"type": "text/javascript"
-													}
-												}
-											],
-											"request": {
-												"method": "POST",
-												"header": [
-													{
-														"key": "Accept",
-														"value": "application/vnd.hmrc.1.0+json",
-														"type": "text"
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
+													"raw": "{{req_body}}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -1154,10 +1656,10 @@
 							"name": "Asynchronous Balance Request(ABR)",
 							"item": [
 								{
-									"name": "TC08-ABR_Success",
+									"name": "TC01-ABR_Success",
 									"item": [
 										{
-											"name": "POST Guarantee Balance Request",
+											"name": "POST-E034/CD034A-Valid",
 											"event": [
 												{
 													"listen": "test",
@@ -1180,6 +1682,16 @@
 															"    pm.collectionVariables.set(\"balanceId\", responseJson.balanceId);",
 															"});",
 															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789015\");",
+															"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX5\");"
 														],
 														"type": "text/javascript"
 													}
@@ -1219,7 +1731,7 @@
 											"response": []
 										},
 										{
-											"name": "GET Guarantee Balance Request Before Response",
+											"name": "GET-E034/CD034A Before Response",
 											"event": [
 												{
 													"listen": "test",
@@ -1333,7 +1845,7 @@
 													"listen": "test",
 													"script": {
 														"exec": [
-															"pm.test(\"Status code is 202 ACCEPTED\", function () {",
+															"pm.test(\"Status code is 200 OK\", function () {",
 															"    pm.response.to.have.status(200);",
 															"});",
 															"",
@@ -1410,8 +1922,7 @@
 											"script": {
 												"type": "text/javascript",
 												"exec": [
-													"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789015\");",
-													"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX5\");"
+													""
 												]
 											}
 										},
@@ -1427,10 +1938,10 @@
 									]
 								},
 								{
-									"name": "TC09-ABR_Functional Error",
+									"name": "TC02-ABR_Functional Error",
 									"item": [
 										{
-											"name": "POST Guarantee Balance Request",
+											"name": "POST-IE906/CD906A",
 											"event": [
 												{
 													"listen": "test",
@@ -1453,6 +1964,16 @@
 															"    pm.collectionVariables.set(\"balanceId\", responseJson.balanceId);",
 															"});",
 															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789016\");",
+															"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX6\");"
 														],
 														"type": "text/javascript"
 													}
@@ -1492,7 +2013,7 @@
 											"response": []
 										},
 										{
-											"name": "GET Guarantee Balance Request Before Response",
+											"name": "GET-IE906/CD906A Before Response",
 											"event": [
 												{
 													"listen": "test",
@@ -1606,7 +2127,7 @@
 													"listen": "test",
 													"script": {
 														"exec": [
-															"pm.test(\"Status code is 202 ACCEPTED\", function () {",
+															"pm.test(\"Status code is 200 OK\", function () {",
 															"    pm.response.to.have.status(200);",
 															"});",
 															"",
@@ -1683,8 +2204,7 @@
 											"script": {
 												"type": "text/javascript",
 												"exec": [
-													"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789016\");",
-													"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX6\");"
+													""
 												]
 											}
 										},
@@ -1700,10 +2220,10 @@
 									]
 								},
 								{
-									"name": "TC10-ABR_XML Error",
+									"name": "TC03-ABR_XML Error",
 									"item": [
 										{
-											"name": "POST Guarantee Balance Request",
+											"name": "POST-IE917/CC917A",
 											"event": [
 												{
 													"listen": "test",
@@ -1726,6 +2246,16 @@
 															"    pm.collectionVariables.set(\"balanceId\", responseJson.balanceId);",
 															"});",
 															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789017\");",
+															"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX7\");"
 														],
 														"type": "text/javascript"
 													}
@@ -1765,7 +2295,7 @@
 											"response": []
 										},
 										{
-											"name": "GET Guarantee Balance Request Before Response",
+											"name": "GET-IE917/CC917A Before Response",
 											"event": [
 												{
 													"listen": "test",
@@ -1953,8 +2483,808 @@
 											"script": {
 												"type": "text/javascript",
 												"exec": [
-													"pm.collectionVariables.set(\"taxIdentifier\", \"GB123456789017\");",
-													"pm.collectionVariables.set(\"guaranteeReference\", \"20GB0000010000GX7\");"
+													""
+												]
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													""
+												]
+											}
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "Rate Limiting Balance Check Requests",
+							"item": [
+								{
+									"name": "TC01-Rate Limiting-Happy/Unhappy Path",
+									"item": [
+										{
+											"name": "POST-Request-IE034/CD034A-User1 GRN1",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"let requests = pm.collectionVariables.get(\"requests\");",
+															"",
+															"if(!requests || requests.length == 0) {",
+															"    requests = [{",
+															"\t\"taxIdentifier\": \"GB5678456123C\",",
+															"\t\"guaranteeReference\": \"GB5678456123CBB\",",
+															"\t\"accessCode\": \"1234\"",
+															"}",
+															"]",
+															"}",
+															"",
+															"let bearer1 = pm.collectionVariables.get(\"bearerToken\");",
+															"console.log(\"The bearer token1 is: \" +bearer1);",
+															"",
+															"var nextrequest = requests.shift();",
+															"pm.collectionVariables.set(\"taxIdentifier\",nextrequest.taxIdentifier);",
+															"pm.collectionVariables.set(\"guaranteeReference\",nextrequest.guaranteeReference);",
+															"pm.collectionVariables.set(\"accessCode\",nextrequest.accessCode);",
+															"pm.collectionVariables.set(\"requests\",requests);",
+															"",
+															"if(requests && requests.length > 0){",
+															"    postman.setNextRequest(\"POST-Request-IE034/CD034A-User1 GRN1\");",
+															"}else{",
+															"    postman.setNextRequest(\"POST-Request-IE034/CD034A-User1 GRN1 58sec Unhappy\");",
+															"}"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 200 OK\", function () {",
+															"    pm.response.to.have.status(200);",
+															"});",
+															"",
+															"pm.test(\"Response body is JSON\", function() {",
+															"    pm.expect(pm.response.to.have.jsonBody());",
+															"});",
+															"",
+															"pm.test(\"Response body contains balance\", function () {",
+															"    const responseJson = pm.response.json();",
+															"    pm.expect(responseJson).to.be.an(\"object\");",
+															"    pm.expect(responseJson).to.have.property(\"response\");",
+															"    pm.expect(responseJson.response).to.be.an(\"object\");",
+															"    pm.expect(responseJson.response).to.have.property(\"balance\");",
+															"    console.log(\"The balance of guaranteeref1 is: \" +responseJson.response.balance);",
+															"    pm.expect(responseJson.response.balance).to.be.a(\"number\");",
+															"    pm.expect(responseJson.response).to.have.property(\"currency\");",
+															"    pm.expect(responseJson.response.currency).to.be.a(\"string\");",
+															"",
+															"    let guaranteeref1 = pm.collectionVariables.get(\"guaranteeReference\");",
+															"    console.log(\"GuaranteeRef1 is: \" +guaranteeref1);",
+															"    //pm.expect(var1).to.be.equals(var2);",
+															"});",
+															"",
+															"//setTimeout(function(){}, 60000);"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/vnd.hmrc.1.0+json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{apiBaseUrl}}/balances",
+													"host": [
+														"{{apiBaseUrl}}"
+													],
+													"path": [
+														"balances"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "POST-Request-IE034/CD034A-User1 GRN1 58sec Unhappy",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"// as a pre-requisite before running this request make sure that the request 'POST - Request-IE034/CD034A-User1 GRN1' should run from the 'TC01-Rate Limiting-Happy/Unhappy Path' folder.",
+															"",
+															"let requests = pm.collectionVariables.get(\"requests\");",
+															"",
+															"if(!requests || requests.length == 0) {",
+															"    requests = [{",
+															"\t\"taxIdentifier\": \"GB5678456123C\",",
+															"\t\"guaranteeReference\": \"GB5678456123CBB\",",
+															"\t\"accessCode\": \"1234\"",
+															"}",
+															"]",
+															"}",
+															"",
+															"let bearer1 = pm.collectionVariables.get(\"bearerToken\");",
+															"console.log(\"The bearer token1 is: \" +bearer1);",
+															"",
+															"setTimeout(function(){}, 58000);",
+															"var nextrequest = requests.shift();",
+															"pm.collectionVariables.set(\"taxIdentifier\",nextrequest.taxIdentifier);",
+															"pm.collectionVariables.set(\"guaranteeReference\",nextrequest.guaranteeReference);",
+															"pm.collectionVariables.set(\"accessCode\",nextrequest.accessCode);",
+															"pm.collectionVariables.set(\"requests\",requests);",
+															"",
+															"if(requests && requests.length > 0){",
+															"    postman.setNextRequest(\"POST-Request-IE034/CD034A-User1 GRN1 58sec Unhappy\");",
+															"}else{",
+															"    postman.setNextRequest(\"POST-Request-IE034/CD034A-User1 GRN1 59sec Unhappy\");",
+															"}",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 429 Too Many Requests\", function () {",
+															"    pm.response.to.have.status(429);",
+															"    pm.response.to.not.have.status(200);",
+															"});",
+															"",
+															"pm.test(\"Response body is JSON\", function() {",
+															"    pm.expect(pm.response.to.have.jsonBody());",
+															"});",
+															"",
+															"pm.test(\"Response body contains too many requests for the same GRN\", function () {",
+															"    const responseJson = pm.response.json();",
+															"    pm.expect(responseJson).to.be.an(\"object\");",
+															"    pm.expect(responseJson).to.have.property(\"code\");",
+															"    pm.expect(responseJson).to.have.property(\"message\");",
+															"    console.log(\"The reason is: \" +responseJson.message);",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/vnd.hmrc.1.0+json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{apiBaseUrl}}/balances",
+													"host": [
+														"{{apiBaseUrl}}"
+													],
+													"path": [
+														"balances"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "POST-Request-IE034/CD034A-User1 GRN1 59sec Unhappy",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"// as a pre-requisite before running this request make sure that the request 'POST - Request-IE034/CD034A-User1 GRN1' should run from the 'TC01-Rate Limiting-Happy/Unhappy Path' folder.",
+															"",
+															"let requests = pm.collectionVariables.get(\"requests\");",
+															"",
+															"if(!requests || requests.length == 0) {",
+															"    requests = [{",
+															"\t\"taxIdentifier\": \"GB5678456123C\",",
+															"\t\"guaranteeReference\": \"GB5678456123CBB\",",
+															"\t\"accessCode\": \"1234\"",
+															"}",
+															"]",
+															"}",
+															"",
+															"let bearer1 = pm.collectionVariables.get(\"bearerToken\");",
+															"console.log(\"The bearer token1 is: \" +bearer1);",
+															"",
+															"",
+															"setTimeout(function(){}, 1000);",
+															"var nextrequest = requests.shift();",
+															"pm.collectionVariables.set(\"taxIdentifier\",nextrequest.taxIdentifier);",
+															"pm.collectionVariables.set(\"guaranteeReference\",nextrequest.guaranteeReference);",
+															"pm.collectionVariables.set(\"accessCode\",nextrequest.accessCode);",
+															"pm.collectionVariables.set(\"requests\",requests);",
+															"",
+															"if(requests && requests.length > 0){",
+															"    postman.setNextRequest(\"POST-Request-IE034/CD034A-User1 GRN1 59sec Unhappy\");",
+															"}else{",
+															"    postman.setNextRequest(\"POST-Request-IE034/CD034A-User1 GRN2\");",
+															"}",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 429 Too Many Requests\", function () {",
+															"    pm.response.to.have.status(429);",
+															"    pm.response.to.not.have.status(200);",
+															"});",
+															"",
+															"pm.test(\"Response body is JSON\", function() {",
+															"    pm.expect(pm.response.to.have.jsonBody());",
+															"});",
+															"",
+															"pm.test(\"Response body contains too many requests for the same GRN\", function () {",
+															"    const responseJson = pm.response.json();",
+															"    pm.expect(responseJson).to.be.an(\"object\");",
+															"    pm.expect(responseJson).to.have.property(\"code\");",
+															"    pm.expect(responseJson).to.have.property(\"message\");",
+															"    console.log(\"The reason is: \" +responseJson.message);",
+															"});",
+															"    //pm.expect(var1).to.be.equals(var2);"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/vnd.hmrc.1.0+json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{apiBaseUrl}}/balances",
+													"host": [
+														"{{apiBaseUrl}}"
+													],
+													"path": [
+														"balances"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "POST-Request-IE034/CD034A-User1 GRN1 after 60sec",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"// as a pre-requisite before running this request make sure that the request 'POST - Request-IE034/CD034A-User1 GRN1' should run from the 'TC01-Rate Limiting-Happy/Unhappy Path' folder.",
+															"",
+															"let requests = pm.collectionVariables.get(\"requests\");",
+															"",
+															"if(!requests || requests.length == 0) {",
+															"    requests = [{",
+															"\t\"taxIdentifier\": \"GB5678456123C\",",
+															"\t\"guaranteeReference\": \"GB5678456123CBB\",",
+															"\t\"accessCode\": \"1234\"",
+															"}",
+															"]",
+															"}",
+															"",
+															"let bearer1 = pm.collectionVariables.get(\"bearerToken\");",
+															"console.log(\"The bearer token1 is: \" +bearer1);",
+															"",
+															"",
+															"setTimeout(function(){}, 1000);",
+															"var nextrequest = requests.shift();",
+															"pm.collectionVariables.set(\"taxIdentifier\",nextrequest.taxIdentifier);",
+															"pm.collectionVariables.set(\"guaranteeReference\",nextrequest.guaranteeReference);",
+															"pm.collectionVariables.set(\"accessCode\",nextrequest.accessCode);",
+															"pm.collectionVariables.set(\"requests\",requests);",
+															"",
+															"if(requests && requests.length > 0){",
+															"    postman.setNextRequest(\"POST-Request-IE034/CD034A-User1 GRN1 after 60sec\");",
+															"}else{",
+															"    postman.setNextRequest(\"POST-Request-IE034/CD034A-User1 GRN2\");",
+															"}",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 200 OK\", function () {",
+															"    pm.response.to.have.status(200);",
+															"    pm.response.to.not.have.status(429);",
+															"});",
+															"",
+															"pm.test(\"Response body is JSON\", function() {",
+															"    pm.expect(pm.response.to.have.jsonBody());",
+															"});",
+															"",
+															"pm.test(\"Response body contains balance\", function () {",
+															"    const responseJson = pm.response.json();",
+															"    pm.expect(responseJson).to.be.an(\"object\");",
+															"    pm.expect(responseJson).to.have.property(\"response\");",
+															"    pm.expect(responseJson.response).to.be.an(\"object\");",
+															"    pm.expect(responseJson.response).to.have.property(\"balance\");",
+															"    console.log(\"The balance of guaranteeref1 is: \" +responseJson.response.balance);",
+															"    pm.expect(responseJson.response.balance).to.be.a(\"number\");",
+															"    pm.expect(responseJson.response).to.have.property(\"currency\");",
+															"    pm.expect(responseJson.response.currency).to.be.a(\"string\");",
+															"",
+															"    let guaranteeref1 = pm.collectionVariables.get(\"guaranteeReference\");",
+															"    console.log(\"GuaranteeRef1 is: \" +guaranteeref1);",
+															"    //pm.expect(var1).to.be.equals(var2);",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/vnd.hmrc.1.0+json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{apiBaseUrl}}/balances",
+													"host": [
+														"{{apiBaseUrl}}"
+													],
+													"path": [
+														"balances"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "POST-Request-IE034/CD034A-User1 GRN2",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"let requests = pm.collectionVariables.get(\"requests\");",
+															"",
+															"if(!requests || requests.length == 0) {",
+															"    requests = [{",
+															"\t\"taxIdentifier\": \"GB5678456123C\",",
+															"\t\"guaranteeReference\": \"GB5678456123CBBVVFF\",",
+															"\t\"accessCode\": \"1234\"",
+															"}",
+															"]",
+															"}",
+															"",
+															"let bearer1 = pm.collectionVariables.get(\"bearerToken\");",
+															"console.log(\"The bearer token1 is:\" +bearer1);",
+															"",
+															"var nextrequest = requests.shift();",
+															"pm.collectionVariables.set(\"taxIdentifier\",nextrequest.taxIdentifier);",
+															"pm.collectionVariables.set(\"guaranteeReference\",nextrequest.guaranteeReference);",
+															"pm.collectionVariables.set(\"accessCode\",nextrequest.accessCode);",
+															"pm.collectionVariables.set(\"requests\",requests);",
+															"",
+															"if(requests && requests.length > 0){",
+															"    postman.setNextRequest(\"POST-Request-IE034/CD034A-User1 GRN2\");",
+															"}else{",
+															"    postman.setNextRequest(\"POST-Auth Login API Bearer Token2\");",
+															"}"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 200 OK\", function () {",
+															"    pm.response.to.have.status(200);",
+															"});",
+															"",
+															"pm.test(\"Response body is JSON\", function() {",
+															"    pm.expect(pm.response.to.have.jsonBody());",
+															"});",
+															"",
+															"pm.test(\"Response body contains balance\", function () {",
+															"    const responseJson = pm.response.json();",
+															"    pm.expect(responseJson).to.be.an(\"object\");",
+															"    pm.expect(responseJson).to.have.property(\"response\");",
+															"    pm.expect(responseJson.response).to.be.an(\"object\");",
+															"    pm.expect(responseJson.response).to.have.property(\"balance\");",
+															"    pm.expect(responseJson.response.balance).to.be.a(\"number\");",
+															"    pm.expect(responseJson.response).to.have.property(\"currency\");",
+															"    pm.expect(responseJson.response.currency).to.be.a(\"string\");",
+															"});",
+															"",
+															"//setTimeout(function(){}, 60000);"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/vnd.hmrc.1.0+json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{apiBaseUrl}}/balances",
+													"host": [
+														"{{apiBaseUrl}}"
+													],
+													"path": [
+														"balances"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "POST-Auth Login API Bearer Token2",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 201 CREATED\", function () {",
+															"    pm.response.to.have.status(201);",
+															"});",
+															"",
+															"pm.test(\"Response contains JSON\", function () {",
+															"    pm.expect(pm.response.to.have.jsonBody());",
+															"});",
+															"",
+															"pm.test(\"Response Authorization header contains bearer token\", function () {",
+															"    pm.expect(pm.response.headers.has('Authorization'));",
+															"    const tokenHeaderText = pm.response.headers.get('Authorization');",
+															"    pm.expect(tokenHeaderText).to.contain(\"Bearer \");",
+															"    const tokenText = tokenHeaderText.replace(\"Bearer \", \"\");",
+															"    pm.collectionVariables.set(\"bearerToken\", tokenText);",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"pm.collectionVariables.set(\"bearerToken\", \"\");"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"auth": {
+													"type": "noauth"
+												},
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"affinityGroup\": \"Individual\",\n    \"credentialStrength\": \"weak\",\n    \"confidenceLevel\": 50,\n    \"credId\": \"{{$randomAlphaNumeric}}\",\n    \"enrolments\": []\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{authLoginApiBaseUrl}}/government-gateway/session/login",
+													"host": [
+														"{{authLoginApiBaseUrl}}"
+													],
+													"path": [
+														"government-gateway",
+														"session",
+														"login"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "POST-Request-IE034/CD034A-User2 GRN1",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"//Before running this request run the Bearer Token request to create a new user/token.",
+															"// Also, as a pre-requisite before running this request make sure that the request 'POST - Request-IE034/CD034A-User1 GRN1' should run from the 'TC01-Rate Limiting-Happy/Unhappy Path' folder - to use the same GuaranteeRef.",
+															"",
+															"let requests = pm.collectionVariables.get(\"requests\");",
+															"",
+															"if(!requests || requests.length == 0) {",
+															"    requests = [{",
+															"\t\"taxIdentifier\": \"GB5678456123C\",",
+															"\t\"guaranteeReference\": \"GB5678456123CBB\",",
+															"\t\"accessCode\": \"1234\"",
+															"}",
+															"]",
+															"}",
+															"",
+															"let bearer2 = pm.collectionVariables.get(\"bearerToken\");",
+															"console.log(\"The bearer token2 is: \" +bearer2);",
+															"",
+															"var nextrequest = requests.shift();",
+															"pm.collectionVariables.set(\"taxIdentifier\",nextrequest.taxIdentifier);",
+															"pm.collectionVariables.set(\"guaranteeReference\",nextrequest.guaranteeReference);",
+															"pm.collectionVariables.set(\"accessCode\",nextrequest.accessCode);",
+															"pm.collectionVariables.set(\"requests\",requests);",
+															"",
+															"if(requests && requests.length > 0){",
+															"    postman.setNextRequest(\"POST-Request-IE034/CD034A-User2 GRN1\");",
+															"}else{",
+															"    postman.setNextRequest(\"POST-Request-IE034/CD034A-User2 GRN2\");",
+															"}"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 200 OK\", function () {",
+															"    pm.response.to.have.status(200);",
+															"});",
+															"",
+															"pm.test(\"Response body is JSON\", function() {",
+															"    pm.expect(pm.response.to.have.jsonBody());",
+															"});",
+															"",
+															"pm.test(\"Response body contains balance\", function () {",
+															"    const responseJson = pm.response.json();",
+															"    pm.expect(responseJson).to.be.an(\"object\");",
+															"    pm.expect(responseJson).to.have.property(\"response\");",
+															"    pm.expect(responseJson.response).to.be.an(\"object\");",
+															"    pm.expect(responseJson.response).to.have.property(\"balance\");",
+															"    console.log(\"The balance of guaranteeref1 is: \" +responseJson.response.balance);",
+															"    pm.expect(responseJson.response.balance).to.be.a(\"number\");",
+															"    pm.expect(responseJson.response).to.have.property(\"currency\");",
+															"    pm.expect(responseJson.response.currency).to.be.a(\"string\");",
+															"",
+															"    let guaranteeref1 = pm.collectionVariables.get(\"guaranteeReference\");",
+															"    console.log(\"GuaranteeRef1 is: \" +guaranteeref1);",
+															"    //pm.expect(var1).to.be.equals(var2);",
+															"});",
+															"",
+															"//setTimeout(function(){}, 60000);"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/vnd.hmrc.1.0+json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{apiBaseUrl}}/balances",
+													"host": [
+														"{{apiBaseUrl}}"
+													],
+													"path": [
+														"balances"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "POST-Request-IE034/CD034A-User2 GRN2",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"//Before running this request run the Bearer Token request to create a new user/token.",
+															"",
+															"let requests = pm.collectionVariables.get(\"requests\");",
+															"",
+															"if(!requests || requests.length == 0) {",
+															"    requests = [{",
+															"\t\"taxIdentifier\": \"GB5678456123C\",",
+															"\t\"guaranteeReference\": \"GB5678456123CBB111\",",
+															"\t\"accessCode\": \"1234\"",
+															"}",
+															"]",
+															"}",
+															"",
+															"let bearer2 = pm.collectionVariables.get(\"bearerToken\");",
+															"console.log(\"The bearer token2 is: \" +bearer2);",
+															"",
+															"var nextrequest = requests.shift();",
+															"pm.collectionVariables.set(\"taxIdentifier\",nextrequest.taxIdentifier);",
+															"pm.collectionVariables.set(\"guaranteeReference\",nextrequest.guaranteeReference);",
+															"pm.collectionVariables.set(\"accessCode\",nextrequest.accessCode);",
+															"pm.collectionVariables.set(\"requests\",requests);",
+															"",
+															"if(requests && requests.length > 0){",
+															"    postman.setNextRequest(\"POST-Request-IE034/CD034A-User2 GRN2\");",
+															"}else{",
+															"    postman.setNextRequest(null);",
+															"}"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 200 OK\", function () {",
+															"    pm.response.to.have.status(200);",
+															"});",
+															"",
+															"pm.test(\"Response body is JSON\", function() {",
+															"    pm.expect(pm.response.to.have.jsonBody());",
+															"});",
+															"",
+															"pm.test(\"Response body contains balance\", function () {",
+															"    const responseJson = pm.response.json();",
+															"    pm.expect(responseJson).to.be.an(\"object\");",
+															"    pm.expect(responseJson).to.have.property(\"response\");",
+															"    pm.expect(responseJson.response).to.be.an(\"object\");",
+															"    pm.expect(responseJson.response).to.have.property(\"balance\");",
+															"    console.log(\"The balance of guaranteeref2 is: \" +responseJson.response.balance);",
+															"    pm.expect(responseJson.response.balance).to.be.a(\"number\");",
+															"    pm.expect(responseJson.response).to.have.property(\"currency\");",
+															"    pm.expect(responseJson.response.currency).to.be.a(\"string\");",
+															"",
+															"    let guaranteeref2 = pm.collectionVariables.get(\"guaranteeReference\");",
+															"    console.log(\"GuaranteeRef2 is: \" +guaranteeref2);",
+															"    //pm.expect(var1).to.be.equals(var2);",
+															"});",
+															"",
+															"//setTimeout(function(){}, 60000);"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/vnd.hmrc.1.0+json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"taxIdentifier\": \"{{taxIdentifier}}\",\n    \"guaranteeReference\": \"{{guaranteeReference}}\",\n    \"accessCode\": \"{{accessCode}}\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{apiBaseUrl}}/balances",
+													"host": [
+														"{{apiBaseUrl}}"
+													],
+													"path": [
+														"balances"
+													]
+												}
+											},
+											"response": []
+										}
+									],
+									"auth": {
+										"type": "bearer",
+										"bearer": [
+											{
+												"key": "token",
+												"value": "{{bearerToken}}",
+												"type": "string"
+											}
+										]
+									},
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													""
 												]
 											}
 										},
@@ -1988,7 +3318,31 @@
 			"item": []
 		}
 	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
 	"variable": [
+		{
+			"key": "bearerToken",
+			"value": ""
+		},
 		{
 			"key": "taxIdentifier",
 			"value": ""
@@ -1998,35 +3352,15 @@
 			"value": ""
 		},
 		{
-			"key": "accessCode",
-			"value": ""
-		},
-		{
-			"key": "bearerToken",
-			"value": ""
-		},
-		{
 			"key": "balanceId",
 			"value": ""
 		},
 		{
-			"key": "taxIdentifiers",
+			"key": "accessCode",
 			"value": ""
 		},
 		{
-			"key": "guaranteeReferences",
-			"value": ""
-		},
-		{
-			"key": "accessCodes",
-			"value": ""
-		},
-		{
-			"key": "guaranteeRef",
-			"value": ""
-		},
-		{
-			"key": "guaranteeRefs",
+			"key": "requests",
 			"value": ""
 		}
 	]
