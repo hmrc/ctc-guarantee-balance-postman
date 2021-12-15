@@ -5,6 +5,7 @@
   "scripts": {
     "smoke-test": "newman run CTC_Guarantee_Balance.postman_collection.json --folder \"CTC_GB_Smoke Tests\" -e Local.postman_environment.json --reporters cli,junit,htmlextra --reporter-junit-export target/smoke-test-reports/junit.xml --reporter-htmlextra-export target/smoke-test-reports/smoke-test-report.html",
     "regression-test": "newman run CTC_Guarantee_Balance.postman_collection.json --folder \"CTC_GB_Regression Tests\" -e Local.postman_environment.json --reporters cli,junit,htmlextra --reporter-junit-export target/regression-test-reports/junit.xml --reporter-htmlextra-export target/regression-test-reports/regression-test-report.html",
+    "staging-regression-test": "newman run CTC_Guarantee_Balance.postman_collection.json --folder \"02_CTC_GB_QA_Stag_Dev_Extr Environment\" \"CTC_GB_Regression Tests\" -e Staging.postman_environment.json --reporters cli,junit,htmlextra --reporter-junit-export target/regression-test-reports/junit.xml --reporter-htmlextra-export target/staging_regression-test-reports/regression-test-report.html",
     "test": "npm run smoke-test && npm run regression-test"
   },
   "devDependencies": {
