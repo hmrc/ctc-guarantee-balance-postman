@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "84b9b51d-719e-458d-8f83-4a736d8eef3c",
+		"_postman_id": "3bbac279-e43e-4607-8116-b807f2b13c7e",
 		"name": "CTC_Guarantee_Balance",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -9,7 +9,7 @@
 			"name": "01_CTC_GB_Local Environment",
 			"item": [
 				{
-					"name": "CTC_GB_Smoke Tests",
+					"name": "CTC_GB_Local_Smoke Tests",
 					"item": [
 						{
 							"name": "Get Bearer Token",
@@ -84,7 +84,7 @@
 					]
 				},
 				{
-					"name": "CTC_GB_Regression Tests",
+					"name": "CTC_GB_Local_Regression Tests",
 					"item": [
 						{
 							"name": "Get Bearer Token",
