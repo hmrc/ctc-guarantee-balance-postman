@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "3bbac279-e43e-4607-8116-b807f2b13c7e",
+		"_postman_id": "c522d5f3-8bce-4b6c-9451-37dea4dae8c6",
 		"name": "CTC_Guarantee_Balance",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18186974"
 	},
 	"item": [
 		{
@@ -3132,18 +3133,10 @@
 													"    pm.response.to.have.status(200);",
 													"});",
 													"",
-													"const $ = cheerio.load(responseBody);",
-													"",
-													"",
-													"const link = $('#main-content > div > div > a'); //jquery get all hyperlinks",
-													"  ",
-													"      const path = $(link).attr('href');",
-													"      var auth_id = path.split(\"=\")[1];",
-													"      pm.environment.set(\"auth_id\",auth_id); //auth_id is continue button.",
-													"      console.log(auth_id);",
-													"    ",
-													"   ",
-													" "
+													"var responseBody = cheerio.load(responseBody);",
+													"var href = responseBody(\"div a[data-module='govuk-button']\").attr('href')",
+													"var auth_id = href.split(\"=\")[1];",
+													"pm.environment.set(\"auth_id\",auth_id);"
 												],
 												"type": "text/javascript"
 											}
@@ -3177,7 +3170,7 @@
 												},
 												{
 													"key": "redirectionUrl",
-													"value": "/oauth/authorize?client_id={{client_id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-guarantee-balance%20common-transit-convention-guarantee-balance-test-support&response_type=code",
+													"value": "/oauth/authorize?client_id={{client_id}}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=common-transit-convention-guarantee-balance common-transit-convention-guarantee-balance-test-support&response_type=code",
 													"type": "text"
 												},
 												{
@@ -10204,6 +10197,34 @@
 		},
 		{
 			"key": "bearerToken",
+			"value": ""
+		},
+		{
+			"key": "req_body",
+			"value": ""
+		},
+		{
+			"key": "TC04_requests",
+			"value": ""
+		},
+		{
+			"key": "TC4_requests",
+			"value": ""
+		},
+		{
+			"key": "TC05_requests",
+			"value": ""
+		},
+		{
+			"key": "TC5_requests",
+			"value": ""
+		},
+		{
+			"key": "TC06_requests",
+			"value": ""
+		},
+		{
+			"key": "TC6_requests",
 			"value": ""
 		}
 	]
