@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "74db1bd3-a26c-4f3a-a3e0-4d2f349ec7dc",
+		"_postman_id": "5b564fc4-fbc9-4c8c-bff7-a3a0c0707c0e",
 		"name": "CTC_Guarantee_Balance",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "18636490"
@@ -2894,8 +2894,24 @@
 															"    pm.expect(pm.response.headers.has('Authorization'));",
 															"    const tokenHeaderText = pm.response.headers.get('Authorization');",
 															"    pm.expect(tokenHeaderText).to.contain(\"Bearer \");",
-															"    const tokenText = tokenHeaderText.replace(\"Bearer \", \"\");",
-															"    pm.collectionVariables.set(\"bearerToken\", tokenText);",
+															"",
+															"    const bearerExtractionRegex = /((.+),)?Bearer ([^,\\s]+)(,.+)?$/g;",
+															"    // There should only be one match, so we just get it out by exploding the iterator and getting the first (and only) result.",
+															"    const matches = [...tokenHeaderText.matchAll(bearerExtractionRegex)][0];",
+															"",
+															"    // Match 3 is the bearer token",
+															"    let bearerToken = matches[3];",
+															"    if (matches[4]) {",
+															"        // Match 4 is if GNAP appears after the bearer token",
+															"        bearerToken += matches[4];",
+															"    }",
+															"",
+															"    if (matches[2]) {",
+															"        // Match 2 is if GNAP appears before the bearer token",
+															"        bearerToken += \",\" + matches[2];",
+															"    }",
+															"",
+															"    pm.collectionVariables.set(\"bearerToken\", bearerToken);",
 															"});"
 														],
 														"type": "text/javascript"
