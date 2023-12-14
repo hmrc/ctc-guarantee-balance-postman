@@ -75,7 +75,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"affinityGroup\": \"Individual\",\n    \"credentialStrength\": \"weak\",\n    \"confidenceLevel\": 50,\n    \"credId\": \"{{$randomAlphaNumeric}}\",\n    \"enrolments\": []\n}",
+											"raw": "{\n    \"affinityGroup\": \"Individual\",\n    \"credentialStrength\": \"strong\",\n    \"confidenceLevel\": 50,\n    \"credId\": \"{{$randomAlphaNumeric}}\",\n    \"enrolments\": []\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -166,7 +166,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"affinityGroup\": \"Individual\",\n    \"credentialStrength\": \"weak\",\n    \"confidenceLevel\": 50,\n    \"credId\": \"{{$randomAlphaNumeric}}\",\n    \"enrolments\": []\n}",
+											"raw": "{\n    \"affinityGroup\": \"Individual\",\n    \"credentialStrength\": \"strong\",\n    \"confidenceLevel\": 50,\n    \"credId\": \"{{$randomAlphaNumeric}}\",\n    \"enrolments\": []\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2935,7 +2935,7 @@
 												"header": [],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"affinityGroup\": \"Individual\",\n    \"credentialStrength\": \"weak\",\n    \"confidenceLevel\": 50,\n    \"credId\": \"{{$randomAlphaNumeric}}\",\n    \"enrolments\": []\n}",
+													"raw": "{\n    \"affinityGroup\": \"Individual\",\n    \"credentialStrength\": \"strong\",\n    \"confidenceLevel\": 50,\n    \"credId\": \"{{$randomAlphaNumeric}}\",\n    \"enrolments\": []\n}",
 													"options": {
 														"raw": {
 															"language": "json"
